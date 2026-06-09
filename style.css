@@ -483,13 +483,12 @@ cite { font-size: 0.72rem; letter-spacing: 0.2em; color: var(--ink-muted); font-
    ============================================================ */
 .contact { padding: var(--section-pad) 2.5rem; background: var(--cream); }
 .contact-inner {
-  max-width: var(--container); margin: 0 auto;
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 6rem; align-items: start;
+  max-width: 600px; margin: 0 auto;
+  text-align: center;
 }
 .contact-desc { font-size: 0.95rem; color: var(--ink-light); margin-bottom: 2.5rem; line-height: 1.9; }
 
-.contact-info { display: flex; flex-direction: column; gap: 0; }
+.contact-info { display: flex; flex-direction: column; gap: 0; max-width: 320px; margin: 0 auto; text-align: left; }
 .contact-link {
   display: flex; align-items: center; gap: 1.25rem;
   padding: 1.25rem 0;
