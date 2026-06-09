@@ -452,89 +452,14 @@ ul { list-style: none; }
    ============================================================ */
 .philosophy { padding: 0 0 var(--section-pad); background: var(--bg2); overflow: hidden; }
 
-/* === Vav Hero Row === */
-.phil-vav-row {
+/* === Centered Layout === */
+.phil-centered {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 4rem 2.5rem;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 2.5rem;
-  padding: 4rem 2.5rem 3rem;
-  max-width: var(--container);
-  margin: 0 auto;
-  border-bottom: 1px solid rgba(192,88,53,0.1);
-  margin-bottom: 4rem;
-}
-.phil-vav-letter {
-  font-family: 'Noto Naskh Arabic', 'Scheherazade New', 'Amiri', Georgia, serif;
-  font-size: clamp(5rem, 12vw, 9rem);
-  font-weight: 400;
-  color: var(--terra);
-  line-height: 1;
-  opacity: 0.85;
-  letter-spacing: 0;
-  flex-shrink: 0;
-  /* subtle text shadow for depth */
-  text-shadow: 0 2px 30px rgba(192,88,53,0.12);
-  animation: vavBreath 6s ease-in-out infinite;
-}
-@keyframes vavBreath {
-  0%,100% { opacity: 0.85; }
-  50%      { opacity: 0.55; }
-}
-.phil-vav-caption {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-.phil-vav-title {
-  font-family: var(--font-serif);
-  font-size: 0.7rem;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: var(--terra);
-}
-.phil-vav-sub {
-  font-size: 0.88rem;
-  color: var(--ink-light);
-  font-style: italic;
-  line-height: 1.6;
-  max-width: 420px;
-}
-
-/* === Main Grid === */
-.philosophy-inner {
-  max-width: var(--container);
-  margin: 0 auto;
-  padding: 0 2.5rem;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 5rem;
-  align-items: start;
-}
-
-/* === Kıllet Quote Block === */
-.phil-killetquote {
-  margin-bottom: 1.75rem;
-  padding-bottom: 1.25rem;
-  border-bottom: 1px solid rgba(192,88,53,0.12);
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-.killetquote-ar {
-  font-family: 'Noto Naskh Arabic', 'Scheherazade New', 'Amiri', Georgia, serif;
-  font-size: 1.05rem;
-  direction: rtl;
-  text-align: right;
-  color: var(--terra-l);
-  letter-spacing: 0.04em;
-  line-height: 1.8;
-}
-.killetquote-tr {
-  font-size: 0.68rem;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--ink-muted);
-  text-align: right;
 }
 
 .quote-marks {
@@ -551,66 +476,6 @@ blockquote em { color: var(--terra); font-style: italic; }
 .quote-attr { display: flex; align-items: center; gap: 12px; margin-bottom: 1.5rem; }
 .quote-attr-line { width: 28px; height: 1px; background: var(--rose-l); }
 cite { font-size: 0.72rem; letter-spacing: 0.2em; color: var(--ink-muted); font-style: normal; text-transform: uppercase; }
-
-.phil-tradition {
-  font-size: 0.82rem; line-height: 1.85;
-  color: var(--ink-light); font-style: italic;
-  border-left: 1px solid var(--rose-l); padding-left: 1rem;
-}
-.phil-tradition em { font-style: normal; color: var(--terra); }
-
-/* === Right Column === */
-.phil-right { display: flex; flex-direction: column; gap: 2.5rem; }
-
-/* Four concepts */
-.phil-elements { display: grid; grid-template-columns: 1fr 1fr; gap: 1.75rem; }
-.phil-el { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
-.phil-icon {
-  width: 44px; height: 44px;
-  border: 1px solid rgba(192,88,53,0.2); border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 1.15rem; color: var(--terra-l);
-  font-family: 'Noto Naskh Arabic', 'Amiri', Georgia, serif;
-  transition: border-color 0.3s, color 0.3s; margin-bottom: 4px;
-}
-.phil-el:hover .phil-icon { border-color: var(--terra); color: var(--terra); }
-.phil-name {
-  display: block; font-family: var(--font-serif); font-size: 1rem;
-  font-weight: 400; color: var(--ink-mid); letter-spacing: 0.04em;
-}
-.phil-el span {
-  font-size: 0.72rem; letter-spacing: 0.02em;
-  color: var(--ink-muted); line-height: 1.55;
-}
-.phil-tradition {
-  margin-top: 0.5rem; font-size: 0.78rem; line-height: 1.8;
-  color: var(--ink-muted); font-style: italic;
-  border-left: 1px solid var(--rose-l); padding-left: 1rem;
-}
-
-/* === Hat Box — dekoratif Vav kutusu === */
-.phil-hatbox {
-  border: 1px solid rgba(192,88,53,0.12);
-  background: var(--cream);
-  padding: 2rem;
-  display: flex;
-  align-items: center;
-  gap: 2rem;
-}
-.phil-hat-vav {
-  font-family: 'Noto Naskh Arabic', 'Scheherazade New', 'Amiri', Georgia, serif;
-  font-size: 4.5rem;
-  color: var(--terra-l);
-  line-height: 1;
-  flex-shrink: 0;
-  opacity: 0.5;
-}
-.phil-hat-desc {
-  font-size: 0.8rem;
-  color: var(--ink-light);
-  line-height: 1.8;
-  font-style: italic;
-}
 
 
 /* ============================================================
