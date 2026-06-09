@@ -4,7 +4,7 @@
 
 // --- WhatsApp Form Handler ---
 // ⚠️ Telefon numaranızı buraya girin (ülke kodu dahil, örn: 905551234567)
-const WHATSAPP_NUMBER = '905000000000';
+const WHATSAPP_NUMBER = '905451927794';
 
 function handleWhatsApp(e) {
   e.preventDefault();
