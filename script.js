@@ -248,7 +248,7 @@ function handleWhatsApp(e) {
   const stats = [
     { el: null, target: 22,   suffix: '+' },
     { el: null, target: 4,    suffix: ''  },
-    { el: null, target: 920,  suffix: '+' },
+    { el: null, target: 6000, suffix: '+' },
   ];
   const statNums = document.querySelectorAll('.stat-num');
   statNums.forEach((el, i) => {
