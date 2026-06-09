@@ -246,7 +246,7 @@ function handleWhatsApp(e) {
 
   // --- Counter Animation for Hero Stats ---
   const stats = [
-    { el: null, target: 22,   suffix: '+' },
+    { el: null, target: 58,   suffix: '+' },
     { el: null, target: 4,    suffix: ''  },
     { el: null, target: 6000, suffix: '+' },
   ];
