@@ -287,33 +287,45 @@ document.addEventListener('DOMContentLoaded', () => {
     requestAnimationFrame(update);
   }
 
-  // --- Gallery Expand/Collapse (Load More/Less) ---
+  // --- Gallery Progressive Pagination (Show 6 at a time) ---
   const loadMoreBtn = document.getElementById('gallery-load-more');
-  const galleryGrid = document.getElementById('gallery-grid');
-  const galleryWrapper = document.getElementById('gallery-wrapper');
+  const cards = Array.from(document.querySelectorAll('.gallery-grid .gallery-card'));
+  const ITEMS_PER_PAGE = 6;
+  let visibleCount = ITEMS_PER_PAGE;
 
-  if (loadMoreBtn && galleryGrid && galleryWrapper) {
-    loadMoreBtn.addEventListener('click', () => {
-      const isExpanded = galleryGrid.classList.contains('expanded');
-      
-      if (isExpanded) {
-        // Scroll smoothly to gallery header before collapsing to prevent losing position
-        const target = document.getElementById('gallery');
-        const offset = 72;
-        const top = target.getBoundingClientRect().top + window.scrollY - offset;
-        
-        window.scrollTo({ top, behavior: 'smooth' });
-
-        // Collapse gallery
-        galleryGrid.classList.remove('expanded');
-        galleryWrapper.classList.remove('expanded');
-        loadMoreBtn.textContent = 'Daha Fazla Göster';
+  function updateGalleryVisibility() {
+    cards.forEach((card, index) => {
+      if (index < visibleCount) {
+        card.style.display = '';
+        // Re-trigger reveal animation for newly shown items
+        if (!card.classList.contains('revealed')) {
+          card.classList.add('revealed');
+        }
       } else {
-        // Expand gallery
-        galleryGrid.classList.add('expanded');
-        galleryWrapper.classList.add('expanded');
-        loadMoreBtn.textContent = 'Daha Az Göster';
+        card.style.display = 'none';
       }
+    });
+
+    if (loadMoreBtn) {
+      if (visibleCount >= cards.length) {
+        loadMoreBtn.textContent = 'Hepsini Gördünüz';
+        loadMoreBtn.style.opacity = '0.5';
+        loadMoreBtn.style.pointerEvents = 'none';
+      } else {
+        loadMoreBtn.textContent = 'Daha Fazla Göster';
+        loadMoreBtn.style.opacity = '';
+        loadMoreBtn.style.pointerEvents = '';
+      }
+    }
+  }
+
+  if (loadMoreBtn && cards.length > 0) {
+    // Initialize gallery state
+    updateGalleryVisibility();
+
+    loadMoreBtn.addEventListener('click', () => {
+      visibleCount += ITEMS_PER_PAGE;
+      updateGalleryVisibility();
     });
   }
 });

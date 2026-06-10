@@ -403,29 +403,6 @@ ul { list-style: none; }
 .gallery-grid {
   max-width: var(--container); margin: 0 auto;
   display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px;
-  max-height: 980px; /* Limits visible area to around first 2 rows of items */
-  overflow: hidden;
-  transition: max-height 0.8s cubic-bezier(0.25, 1, 0.5, 1);
-}
-
-.gallery-grid.expanded {
-  max-height: 8000px; /* Big enough to fit all content */
-}
-
-/* Gradient fade overlay when collapsed */
-.gallery-grid-wrapper::after {
-  content: '';
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
-  height: 220px;
-  background: linear-gradient(to top, var(--cream) 15%, rgba(245, 237, 224, 0) 100%);
-  pointer-events: none;
-  opacity: 1;
-  transition: opacity 0.5s ease;
-}
-
-.gallery-grid-wrapper.expanded::after {
-  opacity: 0;
 }
 
 .gallery-card--large { grid-column: 1 / 3; }
