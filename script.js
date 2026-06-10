@@ -283,6 +283,36 @@ function handleWhatsApp(e) {
     requestAnimationFrame(update);
   }
 
+  // --- Gallery Expand/Collapse (Load More/Less) ---
+  const loadMoreBtn = document.getElementById('gallery-load-more');
+  const galleryGrid = document.getElementById('gallery-grid');
+  const galleryWrapper = document.getElementById('gallery-wrapper');
+
+  if (loadMoreBtn && galleryGrid && galleryWrapper) {
+    loadMoreBtn.addEventListener('click', () => {
+      const isExpanded = galleryGrid.classList.contains('expanded');
+      
+      if (isExpanded) {
+        // Scroll smoothly to gallery header before collapsing to prevent losing position
+        const target = document.getElementById('gallery');
+        const offset = 72;
+        const top = target.getBoundingClientRect().top + window.scrollY - offset;
+        
+        window.scrollTo({ top, behavior: 'smooth' });
+
+        // Collapse gallery
+        galleryGrid.classList.remove('expanded');
+        galleryWrapper.classList.remove('expanded');
+        loadMoreBtn.textContent = 'Daha Fazla Göster';
+      } else {
+        // Expand gallery
+        galleryGrid.classList.add('expanded');
+        galleryWrapper.classList.add('expanded');
+        loadMoreBtn.textContent = 'Daha Az Göster';
+      }
+    });
+  }
+
 });
 
 // --- Contact Form Handler ---

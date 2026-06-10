@@ -393,10 +393,41 @@ ul { list-style: none; }
 .gallery-header .section-tag::before { display: none; }
 .gallery-sub { color: var(--ink-muted); font-size: 0.88rem; letter-spacing: 0.05em; }
 
+/* gallery grid wrapper for show more/less */
+.gallery-grid-wrapper {
+  max-width: var(--container);
+  margin: 0 auto;
+  position: relative;
+}
+
 .gallery-grid {
   max-width: var(--container); margin: 0 auto;
   display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px;
+  max-height: 980px; /* Limits visible area to around first 2 rows of items */
+  overflow: hidden;
+  transition: max-height 0.8s cubic-bezier(0.25, 1, 0.5, 1);
 }
+
+.gallery-grid.expanded {
+  max-height: 8000px; /* Big enough to fit all content */
+}
+
+/* Gradient fade overlay when collapsed */
+.gallery-grid-wrapper::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 220px;
+  background: linear-gradient(to top, var(--cream) 15%, rgba(245, 237, 224, 0) 100%);
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity 0.5s ease;
+}
+
+.gallery-grid-wrapper.expanded::after {
+  opacity: 0;
+}
+
 .gallery-card--large { grid-column: 1 / 3; }
 .gallery-card--wide  { grid-column: 1 / 3; }
 
@@ -430,7 +461,35 @@ ul { list-style: none; }
 }
 .gallery-loc { font-size: 0.72rem; color: rgba(250,245,236,0.55); }
 
-.gallery-cta { max-width: var(--container); margin: 2.5rem auto 0; text-align: center; }
+.gallery-cta {
+  max-width: var(--container);
+  margin: 3.5rem auto 0;
+  text-align: center;
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.gallery-load-more-btn {
+  position: relative;
+  overflow: hidden;
+}
+
+.gallery-load-more-btn::before {
+  content: '';
+  position: absolute;
+  top: 50%; left: -60px;
+  width: 40px; height: 1px;
+  background: var(--terra);
+  transition: left 0.4s var(--ease);
+}
+
+.gallery-load-more-btn:hover::before {
+  left: -10px;
+}
 
 /* ============================================================
    SERVICES
