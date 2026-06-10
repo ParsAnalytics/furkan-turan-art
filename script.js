@@ -252,7 +252,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const stats = [
     { el: null, target: 58,   suffix: '+' },
     { el: null, target: 4,    suffix: ''  },
-    { el: null, target: 6300, suffix: '+' },
+    { el: null, target: 7800, suffix: '+' },
   ];
   const statNums = document.querySelectorAll('.stat-num');
   statNums.forEach((el, i) => {
