@@ -27,6 +27,7 @@ function handleWhatsApp(e) {
   window.open(url, '_blank', 'noopener');
 }
 
+document.addEventListener('DOMContentLoaded', () => {
   // --- Nav Scroll Effect ---
   const nav = document.getElementById('nav');
   const onScroll = () => {
@@ -209,7 +210,10 @@ function handleWhatsApp(e) {
   });
 
   // --- Particles on hero CTA click (mini confetti) ---
-  document.getElementById('hero-gallery-btn').addEventListener('click', spawnPetals);
+  const heroGalBtn = document.getElementById('hero-gallery-btn');
+  if (heroGalBtn) {
+    heroGalBtn.addEventListener('click', spawnPetals);
+  }
 
   function spawnPetals() {
     for (let i = 0; i < 12; i++) {
@@ -312,7 +316,6 @@ function handleWhatsApp(e) {
       }
     });
   }
-
 });
 
 // --- Contact Form Handler ---
