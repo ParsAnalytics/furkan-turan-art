@@ -430,7 +430,7 @@ ul { list-style: none; }
 .services { padding: var(--section-pad) 2.5rem; background: var(--bg); }
 .services-inner { max-width: var(--container); margin: 0 auto; }
 .services-grid {
-  display: grid; grid-template-columns: repeat(4, 1fr);
+  display: grid; grid-template-columns: repeat(3, 1fr);
   gap: 2.5rem; margin-top: 3rem;
 }
 .service-card {
