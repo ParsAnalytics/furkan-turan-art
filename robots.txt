@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://furkan-turan-art.vercel.app/sitemap.xml
