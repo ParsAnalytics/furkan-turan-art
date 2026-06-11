@@ -354,6 +354,19 @@ ul { list-style: none; }
   filter: sepia(8%) saturate(1.1) brightness(0.95);
   pointer-events: none;
 }
+
+/* Tarayıcı video kontrol butonlarını gizle */
+.about-img::-webkit-media-controls { display: none !important; }
+.about-img::-webkit-media-controls-enclosure { display: none !important; }
+.about-img::-webkit-media-controls-panel { display: none !important; }
+.about-img::-webkit-media-controls-play-button { display: none !important; }
+.about-img::-webkit-media-controls-overlay-play-button { display: none !important; }
+.about-img::-webkit-media-controls-start-playback-button { display: none !important; }
+video::-webkit-media-controls { display: none !important; }
+video::-webkit-media-controls-enclosure { display: none !important; }
+video::-webkit-media-controls-panel { display: none !important; }
+video::-webkit-media-controls-overlay-play-button { display: none !important; }
+video::-webkit-media-controls-start-playback-button { display: none !important; }
 .about-img-frame:hover .about-img { transform: scale(1.03); }
 
 .about-desc { font-size: 0.96rem; color: var(--ink-mid); margin-bottom: 1rem; line-height: 1.9; }
