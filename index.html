@@ -38,6 +38,7 @@
         <li><a href="#services" class="nav-link">Hizmetler</a></li>
         <li><a href="#digital-products" class="nav-link">Dijital Ürünler</a></li>
         <li><a href="#boutique-products" class="nav-link">Sınırlı Üretim</a></li>
+        <li><a href="#kampanya" class="nav-link" style="color: var(--terra);">🎁 Kampanya</a></li>
         <li><a href="#contact" class="nav-link">İletişim</a></li>
       </ul>
       <button class="hamburger" id="hamburger" aria-label="Menüyü Aç/Kapat">
@@ -694,6 +695,104 @@
     </div>
   </section>
 
+  <!-- ============================================================
+       KAMPANYA BÖLÜMÜ
+       ============================================================ -->
+  <section id="kampanya" style="background: var(--ink); padding: 6rem 0; position: relative; overflow: hidden;">
+    <!-- Decorative blobs -->
+    <div style="position:absolute;top:-80px;left:-80px;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle,rgba(192,88,53,0.18) 0%,transparent 70%);pointer-events:none;"></div>
+    <div style="position:absolute;bottom:-60px;right:-60px;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,rgba(192,88,53,0.12) 0%,transparent 70%);pointer-events:none;"></div>
+
+    <div class="services-inner" style="position:relative;z-index:1;text-align:center;">
+      <!-- Badge -->
+      <span style="display:inline-block;background:rgba(192,88,53,0.15);color:var(--terra);border:1px solid rgba(192,88,53,0.3);border-radius:99px;padding:6px 20px;font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:1.5rem;">Instagram Kampanya</span>
+
+      <h2 style="font-family:var(--font-serif);font-size:clamp(2rem,5vw,3.2rem);color:#fff;margin-bottom:1rem;line-height:1.15;">
+        Sürpriz <em style="color:var(--terra);">Dijital Sanat</em> Hediyesi
+      </h2>
+      <p style="color:rgba(255,255,255,0.55);max-width:480px;margin:0 auto 2.5rem;font-size:0.95rem;line-height:1.75;">
+        Gönderimizi hikayende paylaş, bizi etiketle — sana özel bir kod gönderelim.<br>
+        Kodu gir, 30 orijinal eserden <strong style="color:rgba(255,255,255,0.85);">rastgele biri</strong> anında insin.
+      </p>
+
+      <!-- Steps -->
+      <div style="display:flex;justify-content:center;gap:2rem;flex-wrap:wrap;margin-bottom:3rem;">
+        <div style="text-align:center;">
+          <div style="width:48px;height:48px;border-radius:50%;border:1px solid rgba(192,88,53,0.4);display:flex;align-items:center;justify-content:center;margin:0 auto 0.6rem;font-size:1.2rem;">📸</div>
+          <p style="color:rgba(255,255,255,0.5);font-size:0.78rem;letter-spacing:0.06em;">Hikayeni Paylaş</p>
+        </div>
+        <div style="color:rgba(255,255,255,0.2);font-size:1.5rem;align-self:center;">→</div>
+        <div style="text-align:center;">
+          <div style="width:48px;height:48px;border-radius:50%;border:1px solid rgba(192,88,53,0.4);display:flex;align-items:center;justify-content:center;margin:0 auto 0.6rem;font-size:1.2rem;">✉️</div>
+          <p style="color:rgba(255,255,255,0.5);font-size:0.78rem;letter-spacing:0.06em;">Kodu Al</p>
+        </div>
+        <div style="color:rgba(255,255,255,0.2);font-size:1.5rem;align-self:center;">→</div>
+        <div style="text-align:center;">
+          <div style="width:48px;height:48px;border-radius:50%;border:1px solid rgba(192,88,53,0.4);display:flex;align-items:center;justify-content:center;margin:0 auto 0.6rem;font-size:1.2rem;">🎨</div>
+          <p style="color:rgba(255,255,255,0.5);font-size:0.78rem;letter-spacing:0.06em;">Eseri İndir</p>
+        </div>
+      </div>
+
+      <!-- Code Input Box -->
+      <div id="kampanya-box" style="max-width:420px;margin:0 auto;">
+        <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:2rem;backdrop-filter:blur(12px);">
+          <label for="kampanya-kod" style="display:block;color:rgba(255,255,255,0.6);font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.75rem;">Kodunuzu Girin</label>
+          <input
+            id="kampanya-kod"
+            type="text"
+            placeholder="FT-XXXXXX"
+            maxlength="9"
+            autocomplete="off"
+            style="
+              width:100%;box-sizing:border-box;
+              background:rgba(255,255,255,0.08);
+              border:1px solid rgba(255,255,255,0.15);
+              border-radius:10px;
+              color:#fff;
+              font-size:1.1rem;
+              letter-spacing:0.15em;
+              text-align:center;
+              text-transform:uppercase;
+              padding:14px 20px;
+              outline:none;
+              transition:border-color 0.3s;
+              margin-bottom:1rem;
+              font-family:var(--font-sans);
+            "
+          />
+          <button
+            id="kampanya-btn"
+            onclick="kampanyaKoduKullan()"
+            style="
+              width:100%;
+              background:linear-gradient(135deg,var(--terra),#e0714a);
+              color:#fff;
+              border:none;
+              border-radius:10px;
+              padding:14px 24px;
+              font-size:0.9rem;
+              font-weight:600;
+              letter-spacing:0.06em;
+              cursor:pointer;
+              transition:opacity 0.3s,transform 0.2s;
+              font-family:var(--font-sans);
+            "
+          >🎁 Eseri Keşfet</button>
+          <p id="kampanya-msg" style="margin-top:1rem;font-size:0.82rem;min-height:1.2rem;color:rgba(255,255,255,0.5);"></p>
+        </div>
+      </div>
+
+      <!-- Success overlay (hidden) -->
+      <div id="kampanya-success" style="display:none;max-width:420px;margin:0 auto;">
+        <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(192,88,53,0.3);border-radius:16px;padding:2.5rem;text-align:center;">
+          <div style="font-size:3rem;margin-bottom:1rem;animation:successPop 0.5s cubic-bezier(0.34,1.56,0.64,1);">🎨</div>
+          <h3 style="color:#fff;font-family:var(--font-serif);font-size:1.5rem;margin-bottom:0.5rem;">Eser İndirildi!</h3>
+          <p style="color:rgba(255,255,255,0.5);font-size:0.85rem;">Orijinal dijital sanat eseriniz hazır.<br>Tekrar kullanım için yeni bir kod gereklidir.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- Footer -->
   <footer class="footer">
     <div class="footer-inner">
@@ -713,6 +812,133 @@
 
     </div>
   </footer>
+
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+    import { getFirestore, doc, getDoc, updateDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+    // ⚠️ Firebase Console'dan aldığınız config bilgilerini buraya girin
+    const firebaseConfig = {
+      apiKey: "BURAYA_API_KEY",
+      authDomain: "BURAYA_AUTH_DOMAIN",
+      projectId: "BURAYA_PROJECT_ID",
+      storageBucket: "BURAYA_STORAGE_BUCKET",
+      messagingSenderId: "BURAYA_MESSAGING_SENDER_ID",
+      appId: "BURAYA_APP_ID"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db  = getFirestore(app);
+
+    // Fotoğraf listesi — Firebase Storage'a yüklediğiniz dosyaların tam URL'lerini buraya girin
+    // Örnek: https://firebasestorage.googleapis.com/v0/b/PROJE/o/foto1.jpg?alt=media
+    const FOTOLAR = [
+      // 'https://firebasestorage.googleapis.com/.../foto01.jpg?alt=media',
+      // 'https://firebasestorage.googleapis.com/.../foto02.jpg?alt=media',
+      // ... 30 fotoğrafı buraya ekleyin
+    ];
+
+    window.kampanyaKoduKullan = async function() {
+      const btn  = document.getElementById('kampanya-btn');
+      const msg  = document.getElementById('kampanya-msg');
+      const inp  = document.getElementById('kampanya-kod');
+      const kod  = inp.value.trim().toUpperCase();
+
+      if (!kod || kod.length < 8) {
+        msg.style.color = '#f87171';
+        msg.textContent = '⚠️ Lütfen geçerli bir kod girin.';
+        return;
+      }
+
+      if (FOTOLAR.length === 0) {
+        msg.style.color = '#f87171';
+        msg.textContent = '⚠️ Fotoğraflar henüz yüklenmedi.';
+        return;
+      }
+
+      btn.disabled = true;
+      btn.style.opacity = '0.6';
+      btn.textContent = '⏳ Kontrol ediliyor...';
+      msg.style.color = 'rgba(255,255,255,0.5)';
+      msg.textContent = '';
+
+      try {
+        const kodRef  = doc(db, 'kampanya-kodlari', kod);
+        const kodSnap = await getDoc(kodRef);
+
+        if (!kodSnap.exists()) {
+          msg.style.color = '#f87171';
+          msg.textContent = '❌ Geçersiz kod. Lütfen tekrar kontrol edin.';
+          resetBtn();
+          return;
+        }
+
+        const data = kodSnap.data();
+        if (data.kullanildi) {
+          msg.style.color = '#f87171';
+          msg.textContent = '❌ Bu kod daha önce kullanılmış.';
+          resetBtn();
+          return;
+        }
+
+        // Kodu kullanıldı olarak işaretle
+        await updateDoc(kodRef, {
+          kullanildi: true,
+          kullanilma_tarihi: serverTimestamp()
+        });
+
+        // Rastgele fotoğraf seç ve indir
+        const rastgele = FOTOLAR[Math.floor(Math.random() * FOTOLAR.length)];
+        const dosyaAdi = rastgele.split('/').pop().split('?')[0] || 'furkan-turan-art.jpg';
+
+        const a = document.createElement('a');
+        a.href = rastgele;
+        a.download = dosyaAdi;
+        a.target = '_blank';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+
+        // Başarı göster
+        document.getElementById('kampanya-box').style.display = 'none';
+        document.getElementById('kampanya-success').style.display = 'block';
+
+      } catch (err) {
+        console.error(err);
+        msg.style.color = '#f87171';
+        msg.textContent = '❌ Bir hata oluştu. Lütfen tekrar deneyin.';
+        resetBtn();
+      }
+    };
+
+    function resetBtn() {
+      const btn = document.getElementById('kampanya-btn');
+      btn.disabled = false;
+      btn.style.opacity = '1';
+      btn.textContent = '🎁 Eseri Keşfet';
+    }
+
+    // Input: otomatik tire ekle (FT-XXXXXX formatı)
+    document.getElementById('kampanya-kod').addEventListener('input', function(e) {
+      let v = e.target.value.replace(/[^A-Za-z0-9]/g,'').toUpperCase();
+      if (v.length > 2) v = v.slice(0,2) + '-' + v.slice(2);
+      e.target.value = v;
+    });
+
+    // Stil: input focus
+    const inp = document.getElementById('kampanya-kod');
+    inp.addEventListener('focus', () => inp.style.borderColor = 'rgba(192,88,53,0.6)');
+    inp.addEventListener('blur',  () => inp.style.borderColor = 'rgba(255,255,255,0.15)');
+
+    // Animasyon
+    if (!document.querySelector('#kampanyaAnim')) {
+      const s = document.createElement('style');
+      s.id = 'kampanyaAnim';
+      s.textContent = `@keyframes successPop { from{transform:scale(0);opacity:0} to{transform:scale(1);opacity:1} }`;
+      document.head.appendChild(s);
+    }
+  </script>
 
   <script src="script.js"></script>
 </body>

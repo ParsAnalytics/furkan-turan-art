@@ -1,1 +1,4 @@
 .vercel
+serviceAccountKey.json
+kampanya-kodlari.txt
+node_modules/
