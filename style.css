@@ -450,6 +450,7 @@ video::-webkit-media-controls-start-playback-button { display: none !important; 
 .gallery-grid {
   max-width: var(--container); margin: 0 auto;
   display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px;
+  grid-auto-flow: dense; /* Boşlukları otomatik olarak doldurur */
 }
 
 .gallery-card--large { grid-column: 1 / 3; }
