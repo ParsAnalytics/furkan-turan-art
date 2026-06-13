@@ -34,8 +34,8 @@
   --gold-dim:    #9A7030;   /* koyu altın */
 
   /* Typography */
-  --font-serif: 'Amatic SC', cursive;
-  --font-body:  'Plus Jakarta Sans', sans-serif;
+  --font-serif: 'Chewy', cursive;
+  --font-body:  'Chewy', cursive;
 
   --section-pad: clamp(5rem, 9vw, 8rem);
   --container:   1100px;
@@ -246,9 +246,9 @@ body {
 
 .hero-title {
   font-family: var(--font-serif);
-  font-size: clamp(4.5rem, 8vw, 7.5rem);
-  font-weight: 700; line-height: 1.0;
-  color: var(--ink); letter-spacing: 0.03em; margin-bottom: 1.75rem;
+  font-size: clamp(3rem, 6.5vw, 5.5rem);
+  font-weight: 400; line-height: 1.15;
+  color: var(--ink); letter-spacing: 0.02em; margin-bottom: 1.75rem;
 }
 .hero-title em { font-style: normal; color: var(--terra); }
 
