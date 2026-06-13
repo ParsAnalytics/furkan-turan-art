@@ -449,17 +449,17 @@ video::-webkit-media-controls-start-playback-button { display: none !important; 
 
 .gallery-grid {
   max-width: var(--container); margin: 0 auto;
-  display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px;
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px;
   grid-auto-flow: dense; /* Boşlukları otomatik olarak doldurur */
 }
 
-.gallery-card--large { grid-column: span 2; }
-.gallery-card--wide  { grid-column: span 2; }
+.gallery-card--large { grid-column: span 1; }
+.gallery-card--wide  { grid-column: span 1; }
 
 .gallery-card { overflow: hidden; position: relative; cursor: pointer; }
-.gallery-card-inner { position: relative; width: 100%; aspect-ratio: 4/3; overflow: hidden; }
-.gallery-card--large .gallery-card-inner { aspect-ratio: 3/2; } /* 16/9 yerine 3/2 yaparak yüksekliği kısalttık */
-.gallery-card--wide  .gallery-card-inner { aspect-ratio: 16/9; } /* 21/9 yerine 16/9 yaptık */
+.gallery-card-inner { position: relative; width: 100%; aspect-ratio: 1/1; overflow: hidden; }
+.gallery-card--large .gallery-card-inner { aspect-ratio: 1/1; } 
+.gallery-card--wide  .gallery-card-inner { aspect-ratio: 1/1; }
 
 .gallery-img {
   width: 100%; height: 100%; object-fit: cover;
@@ -700,14 +700,15 @@ cite { font-size: 0.72rem; letter-spacing: 0.2em; color: var(--ink-muted); font-
    ============================================================ */
 @media (max-width: 1024px) {
   .services-grid { grid-template-columns: repeat(2, 1fr); }
+  .gallery-grid { grid-template-columns: repeat(3, 1fr); }
 }
 @media (max-width: 768px) {
   .nav-links { display: none; }
   .hamburger { display: flex; }
   .mobile-menu { display: block; }
   .about-inner { grid-template-columns: 1fr; gap: 3rem; }
-  .gallery-grid { grid-template-columns: 1fr; }
-  .gallery-card--large, .gallery-card--wide { grid-column: 1; }
+  .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+  .gallery-card--large, .gallery-card--wide { grid-column: span 1; }
   .services-grid { grid-template-columns: 1fr; }
   .philosophy-inner { grid-template-columns: 1fr; gap: 3rem; }
   .contact-inner { grid-template-columns: 1fr; gap: 3rem; }
