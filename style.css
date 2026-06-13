@@ -465,6 +465,12 @@ video::-webkit-media-controls-start-playback-button { display: none !important; 
   width: 100%; height: 100%; object-fit: cover;
   transition: transform 0.8s var(--ease), filter 0.5s;
   filter: sepia(10%) saturate(1.05);
+  pointer-events: none; /* Üzerine tıklamayı CSS olarak engeller, alttaki karta tıklandığında lightbox tetiklenir */
+}
+/* iOS Safari ve Chrome üzerinde varsayılan video oynatma butonlarını gizle */
+.gallery-card-inner video::-webkit-media-controls-start-playback-button {
+  display: none !important;
+  -webkit-appearance: none;
 }
 .gallery-card:hover .gallery-img { transform: scale(1.05); filter: sepia(4%) saturate(1.1); }
 
