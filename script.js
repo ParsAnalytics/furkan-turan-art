@@ -290,7 +290,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- Gallery Progressive Pagination (Show 6 at a time) ---
   const loadMoreBtn = document.getElementById('gallery-load-more');
   const cards = Array.from(document.querySelectorAll('.gallery-grid .gallery-card'));
-  const ITEMS_PER_PAGE = 6;
+  const ITEMS_PER_PAGE = 8;
   let visibleCount = ITEMS_PER_PAGE;
 
   function updateGalleryVisibility() {
