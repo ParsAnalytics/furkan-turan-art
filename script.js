@@ -359,29 +359,47 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => { lbImg.src = ''; }, 400);
   }
 
-  // Galeri resimlerine tıklama
-  document.querySelectorAll('.gallery-card').forEach(card => {
-    card.addEventListener('click', (e) => {
-      // Kart içindeki resmi bul
+  // Galeri resimlerine tıklama (Mobil dokunma ve Masaüstü tıklama için optimize edildi)
+  const galleryGrid = document.getElementById('gallery-grid');
+  if (galleryGrid) {
+    const handleGalleryClick = (e) => {
+      // Tıklanan elemanın en yakın kart (.gallery-card) olup olmadığını bul
+      const card = e.target.closest('.gallery-card');
+      if (!card) return;
+
       const img = card.querySelector('.gallery-img');
       if (!img) return;
+
+      e.preventDefault();
       const title   = card.querySelector('.gallery-title')?.textContent || '';
       const loc     = card.querySelector('.gallery-loc')?.textContent || '';
       const caption = [title, loc].filter(Boolean).join(' — ');
+      
       openLightbox(img.src, img.alt, caption);
-    });
-  });
+    };
 
-  // X butonuna tıklama
-  lbClose.addEventListener('click', (e) => {
+    galleryGrid.addEventListener('click', handleGalleryClick);
+    galleryGrid.addEventListener('touchstart', handleGalleryClick, { passive: false });
+  }
+
+  // X butonuna tıklama/dokunma
+  const handleClose = (e) => {
+    e.preventDefault();
     e.stopPropagation();
     closeLightbox();
-  });
+  };
+  lbClose.addEventListener('click', handleClose);
+  lbClose.addEventListener('touchstart', handleClose, { passive: false });
 
-  // Overlay'e (dışarıya) tıklama
-  overlay.addEventListener('click', (e) => {
-    if (e.target === overlay) closeLightbox();
-  });
+  // Overlay'e (dışarıya) tıklama/dokunma
+  const handleOverlayClose = (e) => {
+    if (e.target === overlay) {
+      e.preventDefault();
+      closeLightbox();
+    }
+  };
+  overlay.addEventListener('click', handleOverlayClose);
+  overlay.addEventListener('touchstart', handleOverlayClose, { passive: false });
 
   // ESC tuşu
   document.addEventListener('keydown', (e) => {
