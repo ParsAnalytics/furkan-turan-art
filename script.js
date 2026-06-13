@@ -297,7 +297,6 @@ document.addEventListener('DOMContentLoaded', () => {
     cards.forEach((card, index) => {
       if (index < visibleCount) {
         card.style.display = '';
-        // Re-trigger reveal animation for newly shown items
         if (!card.classList.contains('revealed')) {
           card.classList.add('revealed');
         }
@@ -320,14 +319,125 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   if (loadMoreBtn && cards.length > 0) {
-    // Initialize gallery state
     updateGalleryVisibility();
-
     loadMoreBtn.addEventListener('click', () => {
       visibleCount += ITEMS_PER_PAGE;
       updateGalleryVisibility();
     });
   }
+
+  // ============================================================
+  // LIGHTBOX
+  // ============================================================
+  const overlay = document.createElement('div');
+  overlay.className = 'lightbox-overlay';
+  overlay.id = 'lightbox-overlay';
+  overlay.innerHTML = `
+    <div class="lightbox-box" id="lightbox-box">
+      <button class="lightbox-close" id="lightbox-close" aria-label="Kapat">✕</button>
+      <img class="lightbox-img" id="lightbox-img" src="" alt="" />
+      <div class="lightbox-caption" id="lightbox-caption"></div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+
+  const lbImg     = document.getElementById('lightbox-img');
+  const lbCaption = document.getElementById('lightbox-caption');
+  const lbClose   = document.getElementById('lightbox-close');
+
+  function openLightbox(src, alt, caption) {
+    lbImg.src = src;
+    lbImg.alt = alt || '';
+    lbCaption.textContent = caption || '';
+    overlay.classList.add('lb-open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    overlay.classList.remove('lb-open');
+    document.body.style.overflow = '';
+    setTimeout(() => { lbImg.src = ''; }, 400);
+  }
+
+  // Galeri resimlerine tıklama
+  document.querySelectorAll('.gallery-card').forEach(card => {
+    card.addEventListener('click', (e) => {
+      // Kart içindeki resmi bul
+      const img = card.querySelector('.gallery-img');
+      if (!img) return;
+      const title   = card.querySelector('.gallery-title')?.textContent || '';
+      const loc     = card.querySelector('.gallery-loc')?.textContent || '';
+      const caption = [title, loc].filter(Boolean).join(' — ');
+      openLightbox(img.src, img.alt, caption);
+    });
+  });
+
+  // X butonuna tıklama
+  lbClose.addEventListener('click', (e) => {
+    e.stopPropagation();
+    closeLightbox();
+  });
+
+  // Overlay'e (dışarıya) tıklama
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) closeLightbox();
+  });
+
+  // ESC tuşu
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeLightbox();
+  });
+
+  // ============================================================
+  // EKRAN GÖRÜNTÜSÜ ENGELLEYİCİ
+  // ============================================================
+
+  // 1) Sağ tık engelle
+  document.addEventListener('contextmenu', e => e.preventDefault());
+
+  // 2) Klavye kısayollarını engelle
+  document.addEventListener('keydown', (e) => {
+    const k = e.key;
+    // PrintScreen, Ctrl+P (yazdır), Ctrl+S (kaydet), F12 (DevTools)
+    if (
+      k === 'PrintScreen' ||
+      k === 'F12' ||
+      (e.ctrlKey && ['p', 'P', 's', 'S', 'u', 'U'].includes(k)) ||
+      (e.metaKey && ['p', 'P', 's', 'S', 'u', 'U'].includes(k)) ||
+      (e.ctrlKey && e.shiftKey && ['i', 'I', 'c', 'C', 'j', 'J'].includes(k))
+    ) {
+      e.preventDefault();
+      e.stopPropagation();
+      return false;
+    }
+  }, true);
+
+  // 3) Drag & drop engellemesi (sürükleyerek kaydetme)
+  document.addEventListener('dragstart', e => e.preventDefault());
+
+  // 4) Yazdırma diyaloğu algılandığında içeriği gizle
+  const antiPrintStyle = document.createElement('style');
+  antiPrintStyle.id = 'anti-print';
+  antiPrintStyle.textContent = `
+    @media print {
+      body * { display: none !important; }
+      body::after {
+        display: block !important;
+        content: "Bu içerik yazdırılamaz.";
+        font-size: 2rem;
+        text-align: center;
+        padding: 4rem;
+        color: #555;
+      }
+    }
+  `;
+  document.head.appendChild(antiPrintStyle);
+
+  // 5) Visibility API — sekme gizlendiğinde blur efekti
+  document.addEventListener('visibilitychange', () => {
+    document.body.style.filter = document.hidden ? 'blur(20px)' : '';
+  });
+
 });
 
 // --- Contact Form Handler ---

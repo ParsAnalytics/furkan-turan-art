@@ -54,9 +54,23 @@ body {
   overflow-x: hidden;
 }
 
-img { display: block; max-width: 100%; height: auto; }
+img {
+  display: block; max-width: 100%; height: auto;
+  -webkit-user-drag: none;       /* sürüklemeyi engelle */
+  -webkit-user-select: none;
+  user-select: none;
+  pointer-events: auto;
+}
 a { text-decoration: none; color: inherit; }
 ul { list-style: none; }
+
+/* Global metin seçimi kısıtlaması */
+body {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+}
+
 
 /* ============================================================
    FLOATING PETALS — terracotta dust
@@ -692,3 +706,71 @@ cite { font-size: 0.72rem; letter-spacing: 0.2em; color: var(--ink-muted); font-
 ::-webkit-scrollbar-thumb { background: var(--rose-l); }
 ::-webkit-scrollbar-thumb:hover { background: var(--terra-l); }
 ::selection { background: rgba(212,120,80,0.18); color: var(--ink); }
+
+/* ============================================================
+   LIGHTBOX
+   ============================================================ */
+.lightbox-overlay {
+  position: fixed; inset: 0; z-index: 9000;
+  background: rgba(20, 10, 6, 0.88);
+  backdrop-filter: blur(10px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 1.5rem;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.35s var(--ease);
+}
+.lightbox-overlay.lb-open {
+  opacity: 1; pointer-events: all;
+}
+
+.lightbox-box {
+  position: relative;
+  max-width: 90vw; max-height: 90vh;
+  display: flex; align-items: center; justify-content: center;
+  transform: scale(0.88);
+  transition: transform 0.4s var(--spring);
+}
+.lightbox-overlay.lb-open .lightbox-box {
+  transform: scale(1);
+}
+
+.lightbox-img {
+  display: block;
+  max-width: 90vw; max-height: 85vh;
+  width: auto; height: auto;
+  object-fit: contain;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.55);
+  user-select: none;
+}
+
+.lightbox-close {
+  position: absolute;
+  top: -18px; right: -18px;
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: var(--terra);
+  border: 2px solid rgba(255,255,255,0.15);
+  color: var(--cream);
+  font-size: 1.1rem; line-height: 1;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  transition: background 0.25s, transform 0.25s var(--spring);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.35);
+  z-index: 1;
+}
+.lightbox-close:hover {
+  background: var(--terra-dim);
+  transform: scale(1.15) rotate(90deg);
+}
+
+.lightbox-caption {
+  position: absolute;
+  bottom: -2.5rem; left: 0; right: 0;
+  text-align: center;
+  font-size: 0.7rem; letter-spacing: 0.2em;
+  text-transform: uppercase; color: rgba(255,255,255,0.45);
+}
+
+/* Galeriye tıklanabilir işareti */
+.gallery-card { cursor: zoom-in; }
+
