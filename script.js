@@ -380,8 +380,47 @@ document.addEventListener('DOMContentLoaded', () => {
   // Galeri resimlerine tıklama (Mobil dokunma ve Masaüstü tıklama için optimize edildi)
   const galleryGrid = document.getElementById('gallery-grid');
   if (galleryGrid) {
-    const handleGalleryClick = (e) => {
-      // Tıklanan elemanın en yakın kart (.gallery-card) olup olmadığını bul
+    let touchStartY = 0;
+    let touchStartX = 0;
+
+    galleryGrid.addEventListener('touchstart', (e) => {
+      // Dokunmanın başladığı koordinatları kaydet
+      const touch = e.touches[0];
+      touchStartY = touch.clientY;
+      touchStartX = touch.clientX;
+    }, { passive: true }); // passive: true ile sayfa kaydırma akıcılığı bozulmaz
+
+    galleryGrid.addEventListener('touchend', (e) => {
+      const card = e.target.closest('.gallery-card');
+      if (!card) return;
+
+      const img = card.querySelector('.gallery-img');
+      if (!img) return;
+
+      // Dokunmanın bittiği koordinatları al
+      const touch = e.changedTouches[0];
+      const diffY = Math.abs(touch.clientY - touchStartY);
+      const diffX = Math.abs(touch.clientX - touchStartX);
+
+      // Eğer parmak 8 pikselden fazla hareket ettiyse bu bir kaydırmadır (scroll), lightbox'ı açma
+      if (diffY > 8 || diffX > 8) {
+        return;
+      }
+
+      e.preventDefault();
+      const title   = card.querySelector('.gallery-title')?.textContent || '';
+      const loc     = card.querySelector('.gallery-loc')?.textContent || '';
+      const caption = [title, loc].filter(Boolean).join(' — ');
+      const isVideo = img.tagName.toLowerCase() === 'video';
+      
+      openLightbox(img.src, img.alt || '', caption, isVideo);
+    });
+
+    // Masaüstü tıklama için click olayı aktif kalır (touchstart/touchend mobilde e.preventDefault() ile sonlanırsa click tetiklenmez)
+    galleryGrid.addEventListener('click', (e) => {
+      // Eğer bu bir dokunmatik cihazsa click olayını görmezden gel (touchend zaten hallediyor)
+      if (e.pointerType === 'touch') return;
+
       const card = e.target.closest('.gallery-card');
       if (!card) return;
 
@@ -395,10 +434,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const isVideo = img.tagName.toLowerCase() === 'video';
       
       openLightbox(img.src, img.alt || '', caption, isVideo);
-    };
-
-    galleryGrid.addEventListener('click', handleGalleryClick);
-    galleryGrid.addEventListener('touchstart', handleGalleryClick, { passive: false });
+    });
   }
 
   // X butonuna tıklama/dokunma
