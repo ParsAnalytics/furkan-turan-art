@@ -34,8 +34,8 @@
   --gold-dim:    #9A7030;   /* koyu altın */
 
   /* Typography */
-  --font-serif: 'Playfair Display', Georgia, serif;
-  --font-body:  'Plus Jakarta Sans', sans-serif;
+  --font-serif: 'Quicksand', sans-serif;
+  --font-body:  'Quicksand', sans-serif;
 
   --section-pad: clamp(5rem, 9vw, 8rem);
   --container:   1100px;
