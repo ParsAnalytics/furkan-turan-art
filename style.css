@@ -453,13 +453,13 @@ video::-webkit-media-controls-start-playback-button { display: none !important; 
   grid-auto-flow: dense; /* Boşlukları otomatik olarak doldurur */
 }
 
-.gallery-card--large { grid-column: 1 / 3; }
-.gallery-card--wide  { grid-column: 1 / 3; }
+.gallery-card--large { grid-column: span 2; }
+.gallery-card--wide  { grid-column: span 2; }
 
 .gallery-card { overflow: hidden; position: relative; cursor: pointer; }
 .gallery-card-inner { position: relative; width: 100%; aspect-ratio: 4/3; overflow: hidden; }
-.gallery-card--large .gallery-card-inner { aspect-ratio: 16/9; }
-.gallery-card--wide  .gallery-card-inner { aspect-ratio: 21/9; }
+.gallery-card--large .gallery-card-inner { aspect-ratio: 3/2; } /* 16/9 yerine 3/2 yaparak yüksekliği kısalttık */
+.gallery-card--wide  .gallery-card-inner { aspect-ratio: 16/9; } /* 21/9 yerine 16/9 yaptık */
 
 .gallery-img {
   width: 100%; height: 100%; object-fit: cover;
