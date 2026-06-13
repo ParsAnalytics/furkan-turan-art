@@ -335,19 +335,32 @@ document.addEventListener('DOMContentLoaded', () => {
   overlay.innerHTML = `
     <div class="lightbox-box" id="lightbox-box">
       <button class="lightbox-close" id="lightbox-close" aria-label="Kapat">✕</button>
-      <img class="lightbox-img" id="lightbox-img" src="" alt="" />
+      <div id="lightbox-content-container" style="display: flex; justify-content: center; align-items: center;">
+        <img class="lightbox-img" id="lightbox-img" src="" alt="" style="display: none;" />
+        <video class="lightbox-img" id="lightbox-video" src="" controls autoplay loop playsinline style="display: none; max-width: 90vw; max-height: 85vh; object-fit: contain; box-shadow: 0 32px 80px rgba(0,0,0,0.55);"></video>
+      </div>
       <div class="lightbox-caption" id="lightbox-caption"></div>
     </div>
   `;
   document.body.appendChild(overlay);
 
   const lbImg     = document.getElementById('lightbox-img');
+  const lbVideo   = document.getElementById('lightbox-video');
   const lbCaption = document.getElementById('lightbox-caption');
   const lbClose   = document.getElementById('lightbox-close');
 
-  function openLightbox(src, alt, caption) {
-    lbImg.src = src;
-    lbImg.alt = alt || '';
+  function openLightbox(src, alt, caption, isVideo) {
+    if (isVideo) {
+      lbImg.style.display = 'none';
+      lbVideo.src = src;
+      lbVideo.style.display = 'block';
+    } else {
+      lbVideo.style.display = 'none';
+      lbVideo.src = '';
+      lbImg.src = src;
+      lbImg.alt = alt || '';
+      lbImg.style.display = 'block';
+    }
     lbCaption.textContent = caption || '';
     overlay.classList.add('lb-open');
     document.body.style.overflow = 'hidden';
@@ -356,7 +369,12 @@ document.addEventListener('DOMContentLoaded', () => {
   function closeLightbox() {
     overlay.classList.remove('lb-open');
     document.body.style.overflow = '';
-    setTimeout(() => { lbImg.src = ''; }, 400);
+    setTimeout(() => { 
+      lbImg.src = ''; 
+      lbVideo.src = '';
+      lbImg.style.display = 'none';
+      lbVideo.style.display = 'none';
+    }, 400);
   }
 
   // Galeri resimlerine tıklama (Mobil dokunma ve Masaüstü tıklama için optimize edildi)
@@ -374,8 +392,9 @@ document.addEventListener('DOMContentLoaded', () => {
       const title   = card.querySelector('.gallery-title')?.textContent || '';
       const loc     = card.querySelector('.gallery-loc')?.textContent || '';
       const caption = [title, loc].filter(Boolean).join(' — ');
+      const isVideo = img.tagName.toLowerCase() === 'video';
       
-      openLightbox(img.src, img.alt, caption);
+      openLightbox(img.src, img.alt || '', caption, isVideo);
     };
 
     galleryGrid.addEventListener('click', handleGalleryClick);
