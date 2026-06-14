@@ -936,8 +936,8 @@
       return;
     }
 
-    // Unlimited/bypass code check (case-sensitive)
-    const IS_UNLIMITED_CODE = (code === "FsdT-AaRdTm2i0n2a6");
+    // Unlimited/bypass code check (case-insensitive)
+    const IS_UNLIMITED_CODE = (code.toLowerCase() === "master34");
     const IS_NORMAL_CODE = (code.toUpperCase() === CAMPAIGN_CODE);
 
     if (!IS_UNLIMITED_CODE && !IS_NORMAL_CODE) {
