@@ -1170,6 +1170,26 @@
   } catch (uaErr) {
     console.error("User agent check failed:", uaErr);
   }
+
+  // Kampanya Duvar Kağıdı Büyütme (Lightbox) Aksiyonları
+  try {
+    document.getElementById('campaign-preview-link').onclick = function(e) {
+      e.preventDefault();
+      const currentImg = document.getElementById('campaign-preview-img').src;
+      if (currentImg && !currentImg.endsWith('#') && !currentImg.endsWith('/')) {
+        document.getElementById('campaign-lightbox-img').src = currentImg;
+        document.getElementById('campaign-lightbox-download').href = currentImg;
+        document.getElementById('campaign-lightbox').style.display = 'flex';
+      }
+    };
+    
+    // Lightbox kapatma aksiyonu
+    document.getElementById('campaign-lightbox-close').onclick = function() {
+      document.getElementById('campaign-lightbox').style.display = 'none';
+    };
+  } catch (lightboxErr) {
+    console.error("Lightbox initialization failed:", lightboxErr);
+  }
 </script>
 
 <!-- Contact Section -->
@@ -1217,6 +1237,17 @@
 <!-- Form removed as requested -->
 </div>
 </section>
+<!-- Campaign Lightbox Modal -->
+<div id="campaign-lightbox" class="campaign-lightbox">
+  <button id="campaign-lightbox-close" class="campaign-lightbox-close" aria-label="Kapat">✕</button>
+  <div class="campaign-lightbox-content">
+    <img id="campaign-lightbox-img" src="" alt="Büyütülmüş Görsel" class="campaign-lightbox-img" />
+  </div>
+  <a id="campaign-lightbox-download" href="" target="_blank" class="btn btn-primary" style="display: block; width: 100%; max-width: 300px; text-align: center; text-decoration: none; padding: 0.8rem 1.5rem;">
+    Tam Ekran Aç & Kaydet
+  </a>
+</div>
+
 <script src="script.js"></script>
 </body>
 </html>
