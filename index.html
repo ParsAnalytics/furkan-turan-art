@@ -975,8 +975,8 @@
     const isInstagram = /Instagram/i.test(ua);
     const isFacebook = /FBAN/i.test(ua) || /FBAV/i.test(ua);
     if (isInstagram || isFacebook) {
-      msg.style.color = '#f87171';
-      msg.textContent = '❌ Instagram içerisinden dosya indirilemez. Lütfen tarayıcıda açın.';
+      msg.style.color = 'var(--ink-muted)';
+      msg.textContent = 'Lütfen bu sayfayı Chrome veya Safari tarayıcınızda açınız.';
       return;
     }
 
@@ -1035,8 +1035,8 @@
         const ipSnap = await getDoc(ipRef);
 
         if (ipSnap.exists()) {
-          msg.style.color = '#f87171';
-          msg.textContent = '❌ Bugün hediye hakkınızı kullandınız. Her gece 24:00\'da yeni hak tanımlanır.';
+          msg.style.color = 'var(--ink-muted)';
+          msg.textContent = '✨ Bugün hediye duvar kağıdınızı aldınız. İlginiz için teşekkürler! Yeni hakkınız gece yarısı (24:00) yenilenecektir.';
           resetBtn();
           return;
         }
@@ -1111,8 +1111,8 @@
 
     } catch (err) {
       console.error(err);
-      msg.style.color = '#f87171';
-      msg.textContent = '❌ Bir hata oluştu. Lütfen tekrar deneyin.';
+      msg.style.color = 'var(--ink-muted)';
+      msg.textContent = 'Ufak bir aksaklık oldu, lütfen tekrar deneyebilir misiniz?';
       resetBtn();
     }
   };
