@@ -894,13 +894,20 @@
         <h3 class="service-title" style="font-size: 1.5rem; margin-bottom: 0.5rem;">Duvar Kağıdınız</h3>
         <p class="about-desc" style="font-size: 0.9rem; margin-bottom: 1rem;">Cihazınız için otomatik indirme de başlatılmıştır.</p>
         
-        <!-- Preview Container for direct long-press save (iOS friendly) -->
-        <div class="campaign-preview-container">
-          <img id="campaign-preview-img" src="" alt="Duvar Kağıdı Önizleme" class="campaign-preview-img" />
-        </div>
+        <!-- Preview Container wrapped in direct link for WebView/Android long-press access -->
+        <a id="campaign-preview-link" href="" target="_blank" style="display: block; width: fit-content; margin: 0 auto; text-decoration: none;">
+          <div class="campaign-preview-container">
+            <img id="campaign-preview-img" src="" alt="Duvar Kağıdı Önizleme" class="campaign-preview-img" />
+          </div>
+        </a>
+
+        <!-- Fullscreen Open Button for WebView/Android compatibility -->
+        <a id="campaign-direct-btn" href="" target="_blank" class="btn btn-secondary" style="display: block; width: 100%; max-width: 320px; margin: 1.5rem auto 1rem auto; text-align: center; text-decoration: none; padding: 0.8rem 1.5rem; font-size: 0.9rem;">
+          Görseli Tam Ekran Aç & Kaydet
+        </a>
         
         <p class="about-desc" style="font-size: 0.85rem; color: var(--ink-muted); margin-top: 1rem; border-top: 1px solid rgba(44, 26, 16, 0.08); padding-top: 1rem; line-height: 1.5;">
-          💡 <strong>Apple (iOS) Kullanıcıları:</strong> Görseli fotoğraf galerinize kaydetmek için yukarıdaki resmin üzerine <strong>basılı tutarak (long-press) "Fotoğraflara Ekle"</strong> veya <strong>"Resmi Kaydet"</strong> seçeneğini seçmelisiniz.
+          💡 <strong>Mobil / Instagram Kullanıcıları:</strong> Otomatik indirme gerçekleşmediyse, görsele tıklayarak veya <strong>"Görseli Tam Ekran Aç"</strong> butonuna basarak resmi tam sayfa açabilir ve açılan sayfada görselin üzerine <strong>basılı tutarak</strong> galerinize kaydedebilirsiniz.
         </p>
       </div>
     </div>
@@ -1050,8 +1057,10 @@
       // 4. Rastgele bir görsel seç
       const randomImg = WALLPAPERS[Math.floor(Math.random() * WALLPAPERS.length)];
       
-      // Önizleme resmini hazırla
+      // Önizleme resmini ve linklerini hazırla
       document.getElementById('campaign-preview-img').src = randomImg;
+      document.getElementById('campaign-preview-link').href = randomImg;
+      document.getElementById('campaign-direct-btn').href = randomImg;
 
       // Başarı adımlarını sıfırla (Adım 1 görünür, Adım 2 gizli)
       document.getElementById('success-step-info').style.display = 'block';
@@ -1092,6 +1101,8 @@
             document.getElementById('campaign-box').style.display = 'flex';
             document.getElementById('campaign-success-box').style.display = 'none';
             document.getElementById('campaign-preview-img').src = '';
+            document.getElementById('campaign-preview-link').href = '#';
+            document.getElementById('campaign-direct-btn').href = '#';
             inp.value = '';
             resetBtn();
             msg.textContent = '';
@@ -1127,6 +1138,8 @@
         document.getElementById('campaign-box').style.display = 'flex';
         document.getElementById('campaign-success-box').style.display = 'none';
         document.getElementById('campaign-preview-img').src = '';
+        document.getElementById('campaign-preview-link').href = '#';
+        document.getElementById('campaign-direct-btn').href = '#';
         document.getElementById('campaign-code').value = '';
         resetBtn();
         document.getElementById('campaign-msg').textContent = '';
