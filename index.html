@@ -840,34 +840,31 @@
     <div class="section-tag">Hediye Duvar Kağıdı</div>
     <h2 class="section-title">Sanatı <em>Yanınızda Taşıyın</em></h2>
     <p class="about-desc">
-      Instagram üzerinden aldığınız özel kampanya kodunu girerek, Latte ve Mocha koleksiyonundan rastgele seçilecek yüksek çözünürlüklü dijital bir duvar kağıdını ücretsiz olarak indirebilirsiniz.
+      Her gün Latte ve Mocha koleksiyonlarından rastgele seçilecek yüksek çözünürlüklü dijital bir duvar kağıdını ücretsiz olarak indirebilirsiniz (Günde 1 adet indirme hakkı mevcuttur).
     </p>
-    
-    <!-- Instagram in-app browser warning -->
-    <div id="instagram-warning" style="display: none; background: rgba(192, 88, 53, 0.08); border: 1px solid var(--terra); border-radius: 12px; padding: 1.25rem; margin-bottom: 2rem; text-align: left; font-size: 0.9rem; line-height: 1.6; color: var(--ink); max-width: 580px; margin-left: auto; margin-right: auto; box-shadow: 0 4px 12px rgba(192, 88, 53, 0.05);">
-      ⚠️ <strong>Instagram İçindesiniz:</strong> Instagram tarayıcısı güvenlik politikaları nedeniyle dosya indirme işlemlerini engeller. Duvar kağıdını sorunsuz almak için sağ üst köşedeki <strong>üç noktaya (•••)</strong> dokunup <strong>"Safari'de Aç"</strong> veya <strong>"Tarayıcıda Aç"</strong> seçeneğini seçiniz.
-    </div>
 
-    <!-- Code Input Box -->
+    <!-- WebView Block Panel (Shown only inside Instagram/Facebook app browser) -->
+    <div id="campaign-webview-block" style="display: none; background: rgba(192, 88, 53, 0.05); border: 1.5px solid var(--terra); border-radius: 20px; padding: 2.5rem 2rem; text-align: center; max-width: 500px; margin: 2rem auto; box-shadow: 0 12px 32px rgba(192, 88, 53, 0.04); animation: successPop 0.6s var(--spring);">
+      <div style="font-size: 3rem; margin-bottom: 1rem;">⚠️</div>
+      <h3 class="service-title" style="font-size: 1.4rem; margin-bottom: 1rem;">Instagram İçindesiniz</h3>
+      <p class="about-desc" id="webview-block-desc" style="font-size: 0.95rem; line-height: 1.6; color: var(--ink); margin-bottom: 0;">
+        Instagram tarayıcısı güvenlik politikaları nedeniyle otomatik dosya indirmeyi ve görsel kaydetmeyi engellemektedir.<br><br>
+        Hediye duvar kağıdınızı sorunsuz indirmek için sağ üst köşedeki <strong>üç noktaya</strong> dokunup <strong>"Tarayıcıda Aç" / "Chrome'da Aç" / "Safari'de Aç"</strong> seçeneğini seçiniz.
+      </p>
+    </div>
+    
+    <!-- Code Input Box (Renamed & Code input field removed) -->
     <div class="campaign-box" id="campaign-box">
-      <input
-        id="campaign-code"
-        type="text"
-        placeholder="KODUNUZU GİRİN"
-        maxlength="12"
-        autocomplete="off"
-        class="campaign-input"
-      />
       <button
         id="campaign-btn"
         onclick="claimWallpaper()"
         class="btn btn-primary campaign-btn"
       >
-        Duvar Kağıdını İndir
+        Hediyeni Al
       </button>
       <p id="campaign-msg" class="campaign-msg"></p>
       <div style="font-size: 0.8rem; color: var(--ink-muted); margin-top: 0.5rem; text-align: center; border-top: 1px solid rgba(192, 88, 53, 0.1); padding-top: 1rem; width: 100%; max-width: 380px; line-height: 1.5;">
-        💡 <strong>iOS / Apple Kullanıcıları:</strong> İndirme işleminden sonra ekrana gelecek görsele <strong>basılı tutarak (long-press) "Fotoğraflara Ekle"</strong> seçeneği ile resmi doğrudan galerinize kaydedebilirsiniz.
+        💡 <strong>Bilgi:</strong> Her IP adresi her gün 1 adet hediye duvar kağıdı indirme hakkına sahiptir. Haklar her gece 24:00'da sıfırlanır.
       </div>
     </div>
 
@@ -911,9 +908,6 @@
         </p>
       </div>
     </div>
-  </div>
-</section>
-
 <!-- Firebase Client SDK & Logic -->
 <script type="module">
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
@@ -922,8 +916,6 @@
   // ==========================================
   // FIREBASE YAPILANDIRMASI
   // ==========================================
-  // Lütfen aşağıdaki bilgileri kendi Firebase projenizin 
-  // web uygulamasından aldığınız config bilgileri ile değiştirin.
   const firebaseConfig = {
     apiKey: "AIzaSyBr3ElkqGsq2xo9jaH8bVXWraA13fibtl4",
     authDomain: "furkanturanart-5f33c.firebaseapp.com",
@@ -933,9 +925,6 @@
     appId: "1:309065568641:web:549adbf1a49b7b39bd1880",
     measurementId: "G-KSSMMDGED5"
   };
-
-  // Paylaşılan Ortak Kampanya Kodu (Büyük harflerle karşılaştırılacaktır)
-  const CAMPAIGN_CODE = "FT-ART2026";
 
   // İndirilebilir yüksek çözünürlüklü görseller
   const WALLPAPERS = [
@@ -960,11 +949,20 @@
     console.error("Firebase initialization failed:", e);
   }
 
+  // Türkiye saatine (UTC+3) göre YYYY-MM-DD formatında tarih stringi al
+  function getTurkeyDateString() {
+    const now = new Date();
+    const utcMs = now.getTime() + (now.getTimezoneOffset() * 60000);
+    const turkeyTime = new Date(utcMs + (3600000 * 3));
+    const yyyy = turkeyTime.getFullYear();
+    const mm = String(turkeyTime.getMonth() + 1).padStart(2, '0');
+    const dd = String(turkeyTime.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+  }
+
   window.claimWallpaper = async function() {
     const btn = document.getElementById('campaign-btn');
     const msg = document.getElementById('campaign-msg');
-    const inp = document.getElementById('campaign-code');
-    const code = inp.value.trim();
 
     if (!db || firebaseConfig.apiKey === "BURAYA_API_KEY") {
       msg.style.color = '#f87171';
@@ -972,32 +970,29 @@
       return;
     }
 
-    if (!code) {
+    // Uygulama içi tarayıcı kontrolü (Ekstra güvenlik)
+    const ua = navigator.userAgent || navigator.vendor || window.opera;
+    const isInstagram = /Instagram/i.test(ua);
+    const isFacebook = /FBAN/i.test(ua) || /FBAV/i.test(ua);
+    if (isInstagram || isFacebook) {
       msg.style.color = '#f87171';
-      msg.textContent = '⚠️ Lütfen size gönderilen kodu girin.';
+      msg.textContent = '❌ Instagram içerisinden dosya indirilemez. Lütfen tarayıcıda açın.';
       return;
     }
 
-    // Unlimited/bypass code check (case-insensitive)
-    const IS_UNLIMITED_CODE = (code.toLowerCase() === "master34");
-    const IS_NORMAL_CODE = (code.toUpperCase() === CAMPAIGN_CODE);
-
-    if (!IS_UNLIMITED_CODE && !IS_NORMAL_CODE) {
-      msg.style.color = '#f87171';
-      msg.textContent = '❌ Geçersiz kod. Lütfen tekrar deneyin.';
-      return;
-    }
+    // URL parametrelerinden test amaçlı master34 kontrolü
+    const urlParams = new URLSearchParams(window.location.search);
+    const IS_UNLIMITED_CODE = (urlParams.get('code') === 'master34' || urlParams.get('test') === '1');
 
     btn.disabled = true;
     btn.style.opacity = '0.6';
     btn.textContent = '⏳ Kontrol ediliyor...';
     msg.style.color = 'var(--ink-muted)';
-    msg.textContent = 'Güvenlik kontrolü yapılıyor...';
+    msg.textContent = 'Günlük indirme hakkı kontrol ediliyor...';
 
     try {
       if (!IS_UNLIMITED_CODE) {
-        // Normal code: Enforce IP restriction
-        // 1. Kullanıcı IP adresini öğren (Hata olasılığına karşı korumalı)
+        // 1. Kullanıcı IP adresini öğren (Yedekli sistem)
         let userIp = null;
         try {
           const ipResponse = await fetch('https://api.ipify.org?format=json');
@@ -1009,7 +1004,6 @@
           console.warn("Primary IP fetch failed, trying fallback...", ipErr1);
         }
 
-        // Birinci servis başarısız olursa alternatif servisi dene
         if (!userIp) {
           try {
             const ipResponse = await fetch('https://ipapi.co/json/');
@@ -1022,7 +1016,6 @@
           }
         }
 
-        // Eğer tüm IP bulma servisleri tarayıcı tarafından engellenirse local bir token üretip Firestore'a yaz
         if (!userIp) {
           let localToken = localStorage.getItem('ft_campaign_token');
           if (!localToken) {
@@ -1032,25 +1025,27 @@
           userIp = localToken;
         }
 
-        // Özel karakterleri temizle (Firestore doc ID için)
-        const safeIpDocId = userIp.replace(/\./g, '_').replace(/:/g, '_');
+        const safeIp = userIp.replace(/\./g, '_').replace(/:/g, '_');
+        const dateStr = getTurkeyDateString();
+        // Gün bazlı IP kaydı için doküman kimliği örn: 192_168_1_1_2026-06-14
+        const safeIpDocId = `${safeIp}_${dateStr}`;
 
-        // 2. IP adresinin veya localToken'ın daha önce indirme yapıp yapmadığını kontrol et
+        // 2. Bugün bu IP'den indirme yapılmış mı kontrol et
         const ipRef = doc(db, 'kullanici-ipleri', safeIpDocId);
         const ipSnap = await getDoc(ipRef);
 
         if (ipSnap.exists()) {
           msg.style.color = '#f87171';
-          msg.textContent = '❌ Bu cihaz/IP adresi üzerinden daha önce indirme yapılmış.';
+          msg.textContent = '❌ Bugün hediye hakkınızı kullandınız. Her gece 24:00\'da yeni hak tanımlanır.';
           resetBtn();
           return;
         }
 
-        // 3. IP/Token adresini Firestore'a kaydet (İndirme yapılmış olarak işaretle)
+        // 3. Hakkı kullanılmış olarak Firestore'a kaydet
         await setDoc(ipRef, {
           ip: userIp,
           tarih: serverTimestamp(),
-          kod: code
+          tarihStr: dateStr
         });
       }
 
@@ -1076,7 +1071,7 @@
         document.getElementById('success-step-info').style.display = 'none';
         document.getElementById('success-step-preview').style.display = 'block';
 
-        // Blob indirme işlemini başlat (yedek olarak otomatik indirme tetiklenir)
+        // Blob indirme işlemini başlat (yedek otomatik indirme)
         try {
           const fileResponse = await fetch(randomImg);
           if (fileResponse.ok) {
@@ -1095,7 +1090,7 @@
           console.error("Auto download failed:", downloadErr);
         }
 
-        // Test/Sınırsız kodu ise görsel gösterildikten 8 saniye sonra formu sıfırla ve geri getir
+        // Sınırsız test modu ise 8 saniye sonra sıfırla
         if (IS_UNLIMITED_CODE) {
           setTimeout(() => {
             document.getElementById('campaign-box').style.display = 'flex';
@@ -1103,14 +1098,12 @@
             document.getElementById('campaign-preview-img').src = '';
             document.getElementById('campaign-preview-link').href = '#';
             document.getElementById('campaign-direct-btn').href = '#';
-            inp.value = '';
             resetBtn();
             msg.textContent = '';
           }, 8000);
         }
       };
 
-      // Normal kullanıcıda butonu arka planda sıfırla (sayfa yenilenirse veya form sıfırlanırsa hazır olsun)
       if (!IS_UNLIMITED_CODE) {
         resetBtn();
         msg.textContent = '';
@@ -1119,7 +1112,7 @@
     } catch (err) {
       console.error(err);
       msg.style.color = '#f87171';
-      msg.textContent = '❌ İşlem sırasında bir hata oluştu. Lütfen tekrar deneyin.';
+      msg.textContent = '❌ Bir hata oluştu. Lütfen tekrar deneyin.';
       resetBtn();
     }
   };
@@ -1128,19 +1121,18 @@
     const btn = document.getElementById('campaign-btn');
     btn.disabled = false;
     btn.style.opacity = '1';
-    btn.textContent = 'Duvar Kağıdını İndir';
+    btn.textContent = 'Hediyeni Al';
   }
 
   // Kapatma (X) butonu aksiyonu
   try {
     document.getElementById('campaign-close-btn').onclick = function() {
-      if (confirm("Bu ekranı kapatırsanız hediye duvar kağıdınıza tekrar erişemeyebilirsiniz (her kod tek kullanımlıktır). Kapatmak istediğinize emin misiniz?")) {
+      if (confirm("Bu ekranı kapatırsanız hediye duvar kağıdınıza tekrar erişemeyebilirsiniz (günde 1 adet hakkınız vardır). Kapatmak istediğinize emin misiniz?")) {
         document.getElementById('campaign-box').style.display = 'flex';
         document.getElementById('campaign-success-box').style.display = 'none';
         document.getElementById('campaign-preview-img').src = '';
         document.getElementById('campaign-preview-link').href = '#';
         document.getElementById('campaign-direct-btn').href = '#';
-        document.getElementById('campaign-code').value = '';
         resetBtn();
         document.getElementById('campaign-msg').textContent = '';
       }
@@ -1157,15 +1149,19 @@
     
     if (isInstagram || isFacebook) {
       const isAndroid = /Android/i.test(ua);
-      const warningEl = document.getElementById('instagram-warning');
+      const webviewBlock = document.getElementById('campaign-webview-block');
+      const campaignBox = document.getElementById('campaign-box');
+      const blockDesc = document.getElementById('webview-block-desc');
+      
+      campaignBox.style.display = 'none';
       
       if (isAndroid) {
-        warningEl.innerHTML = `⚠️ <strong>Instagram İçindesiniz (Android):</strong> Instagram tarayıcısı güvenlik politikaları nedeniyle dosya indirmeyi ve görsel basılı tutarak kaydetmeyi engeller. Duvar kağıdını sorunsuz almak için sağ üst köşedeki <strong>üç noktaya (⋮)</strong> dokunup <strong>"Chrome'da Aç"</strong> veya <strong>"Tarayıcıda Aç"</strong> seçeneğini seçmelisiniz.`;
+        blockDesc.innerHTML = `Instagram tarayıcısı güvenlik politikaları nedeniyle otomatik dosya indirmeyi ve görsel kaydetmeyi engellemektedir.<br><br>Hediye duvar kağıdınızı sorunsuz indirmek için sağ üst köşedeki <strong>üç noktaya (⋮)</strong> dokunup <strong>"Chrome'da Aç"</strong> veya <strong>"Tarayıcıda Aç"</strong> seçeneğini seçmelisiniz.`;
       } else {
-        warningEl.innerHTML = `⚠️ <strong>Instagram İçindesiniz (iOS / Apple):</strong> Instagram tarayıcısı güvenlik politikaları nedeniyle otomatik dosya indirmeyi engeller. Duvar kağıdını sorunsuz indirmek için sağ üst köşedeki <strong>üç noktaya (•••)</strong> dokunup <strong>"Safari'de Aç"</strong> seçeneğini seçmelisiniz.`;
+        blockDesc.innerHTML = `Instagram tarayıcısı güvenlik politikaları nedeniyle otomatik dosya indirmeyi engellemektedir.<br><br>Hediye duvar kağıdınızı sorunsuz indirmek için sağ üst köşedeki <strong>üç noktaya (•••)</strong> dokunup <strong>"Safari'de Aç"</strong> seçeneğini seçmelisiniz.`;
       }
       
-      warningEl.style.display = 'block';
+      webviewBlock.style.display = 'block';
     }
   } catch (uaErr) {
     console.error("User agent check failed:", uaErr);
