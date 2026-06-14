@@ -842,6 +842,11 @@
     <p class="about-desc">
       Instagram üzerinden aldığınız özel kampanya kodunu girerek, Latte ve Mocha koleksiyonundan rastgele seçilecek yüksek çözünürlüklü dijital bir duvar kağıdını ücretsiz olarak indirebilirsiniz.
     </p>
+    
+    <!-- Instagram in-app browser warning -->
+    <div id="instagram-warning" style="display: none; background: rgba(192, 88, 53, 0.08); border: 1px solid var(--terra); border-radius: 12px; padding: 1.25rem; margin-bottom: 2rem; text-align: left; font-size: 0.9rem; line-height: 1.6; color: var(--ink); max-width: 580px; margin-left: auto; margin-right: auto; box-shadow: 0 4px 12px rgba(192, 88, 53, 0.05);">
+      ⚠️ <strong>Instagram İçindesiniz:</strong> Instagram tarayıcısı güvenlik politikaları nedeniyle dosya indirme işlemlerini engeller. Duvar kağıdını sorunsuz almak için sağ üst köşedeki <strong>üç noktaya (•••)</strong> dokunup <strong>"Safari'de Aç"</strong> veya <strong>"Tarayıcıda Aç"</strong> seçeneğini seçiniz.
+    </div>
 
     <!-- Code Input Box -->
     <div class="campaign-box" id="campaign-box">
@@ -983,16 +988,45 @@
     try {
       if (!IS_UNLIMITED_CODE) {
         // Normal code: Enforce IP restriction
-        // 1. Kullanıcı IP adresini öğren
-        const ipResponse = await fetch('https://api.ipify.org?format=json');
-        if (!ipResponse.ok) throw new Error("IP fetch failed");
-        const ipData = await ipResponse.json();
-        const userIp = ipData.ip;
-        
-        // IP içindeki noktaları veya özel karakterleri döküman kimliğinde sorun yaratmaması için güvenli hale getir
+        // 1. Kullanıcı IP adresini öğren (Hata olasılığına karşı korumalı)
+        let userIp = null;
+        try {
+          const ipResponse = await fetch('https://api.ipify.org?format=json');
+          if (ipResponse.ok) {
+            const ipData = await ipResponse.json();
+            userIp = ipData.ip;
+          }
+        } catch (ipErr1) {
+          console.warn("Primary IP fetch failed, trying fallback...", ipErr1);
+        }
+
+        // Birinci servis başarısız olursa alternatif servisi dene
+        if (!userIp) {
+          try {
+            const ipResponse = await fetch('https://ipapi.co/json/');
+            if (ipResponse.ok) {
+              const ipData = await ipResponse.json();
+              userIp = ipData.ip;
+            }
+          } catch (ipErr2) {
+            console.warn("Fallback IP fetch failed...", ipErr2);
+          }
+        }
+
+        // Eğer tüm IP bulma servisleri tarayıcı tarafından engellenirse local bir token üretip Firestore'a yaz
+        if (!userIp) {
+          let localToken = localStorage.getItem('ft_campaign_token');
+          if (!localToken) {
+            localToken = 'anon_' + Math.random().toString(36).substring(2, 15) + '_' + Date.now();
+            localStorage.setItem('ft_campaign_token', localToken);
+          }
+          userIp = localToken;
+        }
+
+        // Özel karakterleri temizle (Firestore doc ID için)
         const safeIpDocId = userIp.replace(/\./g, '_').replace(/:/g, '_');
 
-        // 2. IP adresinin daha önce indirip indirmediğini kontrol et
+        // 2. IP adresinin veya localToken'ın daha önce indirme yapıp yapmadığını kontrol et
         const ipRef = doc(db, 'kullanici-ipleri', safeIpDocId);
         const ipSnap = await getDoc(ipRef);
 
@@ -1003,7 +1037,7 @@
           return;
         }
 
-        // 3. IP adresini Firestore'a kaydet (İndirme yapılmış olarak işaretle)
+        // 3. IP/Token adresini Firestore'a kaydet (İndirme yapılmış olarak işaretle)
         await setDoc(ipRef, {
           ip: userIp,
           tarih: serverTimestamp(),
@@ -1082,6 +1116,19 @@
     btn.disabled = false;
     btn.style.opacity = '1';
     btn.textContent = 'Duvar Kağıdını İndir';
+  }
+
+  // Instagram veya Facebook uygulama içi tarayıcı tespiti
+  try {
+    const ua = navigator.userAgent || navigator.vendor || window.opera;
+    const isInstagram = /Instagram/i.test(ua);
+    const isFacebook = /FBAN/i.test(ua) || /FBAV/i.test(ua);
+    
+    if (isInstagram || isFacebook) {
+      document.getElementById('instagram-warning').style.display = 'block';
+    }
+  } catch (uaErr) {
+    console.error("User agent check failed:", uaErr);
   }
 </script>
 
