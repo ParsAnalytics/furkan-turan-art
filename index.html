@@ -922,7 +922,7 @@
     const btn = document.getElementById('campaign-btn');
     const msg = document.getElementById('campaign-msg');
     const inp = document.getElementById('campaign-code');
-    const code = inp.value.trim().toUpperCase();
+    const code = inp.value.trim();
 
     if (!db || firebaseConfig.apiKey === "BURAYA_API_KEY") {
       msg.style.color = '#f87171';
@@ -936,7 +936,11 @@
       return;
     }
 
-    if (code !== CAMPAIGN_CODE) {
+    // Unlimited/bypass code check (case-sensitive)
+    const IS_UNLIMITED_CODE = (code === "FsdT-AaRdTm2i0n2a6");
+    const IS_NORMAL_CODE = (code.toUpperCase() === CAMPAIGN_CODE);
+
+    if (!IS_UNLIMITED_CODE && !IS_NORMAL_CODE) {
       msg.style.color = '#f87171';
       msg.textContent = '❌ Geçersiz kod. Lütfen tekrar deneyin.';
       return;
@@ -949,32 +953,35 @@
     msg.textContent = 'Güvenlik kontrolü yapılıyor...';
 
     try {
-      // 1. Kullanıcı IP adresini öğren
-      const ipResponse = await fetch('https://api.ipify.org?format=json');
-      if (!ipResponse.ok) throw new Error("IP fetch failed");
-      const ipData = await ipResponse.json();
-      const userIp = ipData.ip;
-      
-      // IP içindeki noktaları veya özel karakterleri döküman kimliğinde sorun yaratmaması için güvenli hale getir
-      const safeIpDocId = userIp.replace(/\./g, '_').replace(/:/g, '_');
+      if (!IS_UNLIMITED_CODE) {
+        // Normal code: Enforce IP restriction
+        // 1. Kullanıcı IP adresini öğren
+        const ipResponse = await fetch('https://api.ipify.org?format=json');
+        if (!ipResponse.ok) throw new Error("IP fetch failed");
+        const ipData = await ipResponse.json();
+        const userIp = ipData.ip;
+        
+        // IP içindeki noktaları veya özel karakterleri döküman kimliğinde sorun yaratmaması için güvenli hale getir
+        const safeIpDocId = userIp.replace(/\./g, '_').replace(/:/g, '_');
 
-      // 2. IP adresinin daha önce indirip indirmediğini kontrol et
-      const ipRef = doc(db, 'kullanici-ipleri', safeIpDocId);
-      const ipSnap = await getDoc(ipRef);
+        // 2. IP adresinin daha önce indirip indirmediğini kontrol et
+        const ipRef = doc(db, 'kullanici-ipleri', safeIpDocId);
+        const ipSnap = await getDoc(ipRef);
 
-      if (ipSnap.exists()) {
-        msg.style.color = '#f87171';
-        msg.textContent = '❌ Bu cihaz/IP adresi üzerinden daha önce indirme yapılmış.';
-        resetBtn();
-        return;
+        if (ipSnap.exists()) {
+          msg.style.color = '#f87171';
+          msg.textContent = '❌ Bu cihaz/IP adresi üzerinden daha önce indirme yapılmış.';
+          resetBtn();
+          return;
+        }
+
+        // 3. IP adresini Firestore'a kaydet (İndirme yapılmış olarak işaretle)
+        await setDoc(ipRef, {
+          ip: userIp,
+          tarih: serverTimestamp(),
+          kod: code
+        });
       }
-
-      // 3. IP adresini Firestore'a kaydet (İndirme yapılmış olarak işaretle)
-      await setDoc(ipRef, {
-        ip: userIp,
-        tarih: serverTimestamp(),
-        kod: code
-      });
 
       // 4. Rastgele bir görsel seç
       const randomImg = WALLPAPERS[Math.floor(Math.random() * WALLPAPERS.length)];
@@ -999,6 +1006,17 @@
       document.getElementById('campaign-box').style.display = 'none';
       document.getElementById('campaign-success-box').style.display = 'block';
 
+      // Unlimited kod ise 3 saniye sonra formu tekrar görünür yap ki tekrar indirilebilsin
+      if (IS_UNLIMITED_CODE) {
+        setTimeout(() => {
+          document.getElementById('campaign-box').style.display = 'flex';
+          document.getElementById('campaign-success-box').style.display = 'none';
+          inp.value = '';
+          resetBtn();
+          msg.textContent = '';
+        }, 3000);
+      }
+
     } catch (err) {
       console.error(err);
       msg.style.color = '#f87171';
@@ -1013,11 +1031,6 @@
     btn.style.opacity = '1';
     btn.textContent = 'Görseli İndir';
   }
-
-  // Input styling: otomatik büyük harf yapma
-  document.getElementById('campaign-code').addEventListener('input', function(e) {
-    e.target.value = e.target.value.toUpperCase();
-  });
 </script>
 
 <!-- Contact Section -->
