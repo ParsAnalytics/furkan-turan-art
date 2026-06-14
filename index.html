@@ -824,6 +824,193 @@
 </div>
 </div>
 </section>
+
+<!-- Campaign Section -->
+<section class="campaign" id="campaign">
+  <div class="campaign-inner">
+    <div class="section-tag">Hediye Duvar Kağıdı</div>
+    <h2 class="section-title">Sanatı <em>Yanınızda Taşıyın</em></h2>
+    <p class="about-desc">
+      Instagram üzerinden aldığınız özel kampanya kodunu girerek, Furkan Turan koleksiyonundan rastgele seçilecek yüksek çözünürlüklü dijital bir duvar kağıdını ücretsiz olarak indirebilirsiniz.
+    </p>
+
+    <!-- Code Input Box -->
+    <div class="campaign-box" id="campaign-box">
+      <input
+        id="campaign-code"
+        type="text"
+        placeholder="KODUNUZU GİRİN"
+        maxlength="12"
+        autocomplete="off"
+        class="campaign-input"
+      />
+      <button
+        id="campaign-btn"
+        onclick="claimWallpaper()"
+        class="btn btn-primary campaign-btn"
+      >
+        🎁 Görseli İndir
+      </button>
+      <p id="campaign-msg" class="campaign-msg"></p>
+    </div>
+
+    <!-- Success Box (hidden by default) -->
+    <div class="campaign-success-box" id="campaign-success-box">
+      <div class="campaign-success-icon">🎨</div>
+      <h3 class="service-title" style="font-size: 1.5rem; margin-bottom: 0.5rem;">Duvar Kağıdınız İndirildi!</h3>
+      <p class="about-desc" style="font-size: 0.9rem;">Cihazınıza özel yüksek çözünürlüklü dijital sanat eseri indirme işlemi başlatıldı. Keyifle kullanın!</p>
+    </div>
+  </div>
+</section>
+
+<!-- Firebase Client SDK & Logic -->
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+  import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+  // ==========================================
+  // FIREBASE YAPILANDIRMASI
+  // ==========================================
+  // Lütfen aşağıdaki bilgileri kendi Firebase projenizin 
+  // web uygulamasından aldığınız config bilgileri ile değiştirin.
+  const firebaseConfig = {
+    apiKey: "BURAYA_API_KEY",
+    authDomain: "BURAYA_AUTH_DOMAIN",
+    projectId: "BURAYA_PROJECT_ID",
+    storageBucket: "BURAYA_STORAGE_BUCKET",
+    messagingSenderId: "BURAYA_MESSAGING_SENDER_ID",
+    appId: "BURAYA_APP_ID"
+  };
+
+  // Paylaşılan Ortak Kampanya Kodu (Büyük harflerle karşılaştırılacaktır)
+  const CAMPAIGN_CODE = "FT-ART2026";
+
+  // İndirilebilir yüksek çözünürlüklü görseller
+  const WALLPAPERS = [
+    "work_img_1.jpeg", "work_img_2.jpeg", "work_img_3.jpeg",
+    "work_img_10.jpeg", "work_img_11.jpeg", "work_img_12.jpeg",
+    "work_img_13.jpeg", "work_img_14.jpeg", "work_img_15.jpeg",
+    "work_img_16.jpeg", "work_img_17.jpeg", "work_img_18.jpeg",
+    "09poyug.jpeg", "123ewd.jpeg", "123ewqdsa.jpeg", "12ewq.jpeg",
+    "12ewqsa.jpeg", "23ewds.jpeg", "23ewfsd.jpeg", "23ewsd.jpeg",
+    "23rewds.jpeg", "253qwefsd.jpeg", "324fds.jpeg", "43ew.jpeg",
+    "45wtsa.jpeg", "56hg.jpeg", "87t6rtghmb.jpeg", "bruch_painted_elvis.jpeg",
+    "dog_art_hanging.jpeg", "dog_art_living_room_1.jpeg", "dog_art_living_room_2.jpeg",
+    "canvas_display_interior_1.jpeg", "canvas_display_interior_2.jpeg", "canvas_display_interior_3.jpeg",
+    "modern_minimalist_interior.jpeg"
+  ];
+
+  // Initialize Firebase
+  let db;
+  try {
+    const app = initializeApp(firebaseConfig);
+    db = getFirestore(app);
+  } catch (e) {
+    console.error("Firebase initialization failed:", e);
+  }
+
+  window.claimWallpaper = async function() {
+    const btn = document.getElementById('campaign-btn');
+    const msg = document.getElementById('campaign-msg');
+    const inp = document.getElementById('campaign-code');
+    const code = inp.value.trim().toUpperCase();
+
+    if (!db || firebaseConfig.apiKey === "BURAYA_API_KEY") {
+      msg.style.color = '#f87171';
+      msg.textContent = '❌ Sistem yapılandırması henüz tamamlanmadı (Firebase config eksik).';
+      return;
+    }
+
+    if (!code) {
+      msg.style.color = '#f87171';
+      msg.textContent = '⚠️ Lütfen size gönderilen kodu girin.';
+      return;
+    }
+
+    if (code !== CAMPAIGN_CODE) {
+      msg.style.color = '#f87171';
+      msg.textContent = '❌ Geçersiz kod. Lütfen tekrar deneyin.';
+      return;
+    }
+
+    btn.disabled = true;
+    btn.style.opacity = '0.6';
+    btn.textContent = '⏳ Kontrol ediliyor...';
+    msg.style.color = 'var(--ink-muted)';
+    msg.textContent = 'Güvenlik kontrolü yapılıyor...';
+
+    try {
+      // 1. Kullanıcı IP adresini öğren
+      const ipResponse = await fetch('https://api.ipify.org?format=json');
+      if (!ipResponse.ok) throw new Error("IP fetch failed");
+      const ipData = await ipResponse.json();
+      const userIp = ipData.ip;
+      
+      // IP içindeki noktaları veya özel karakterleri döküman kimliğinde sorun yaratmaması için güvenli hale getir
+      const safeIpDocId = userIp.replace(/\./g, '_').replace(/:/g, '_');
+
+      // 2. IP adresinin daha önce indirip indirmediğini kontrol et
+      const ipRef = doc(db, 'kullanici-ipleri', safeIpDocId);
+      const ipSnap = await getDoc(ipRef);
+
+      if (ipSnap.exists()) {
+        msg.style.color = '#f87171';
+        msg.textContent = '❌ Bu cihaz/IP adresi üzerinden daha önce indirme yapılmış.';
+        resetBtn();
+        return;
+      }
+
+      // 3. IP adresini Firestore'a kaydet (İndirme yapılmış olarak işaretle)
+      await setDoc(ipRef, {
+        ip: userIp,
+        tarih: serverTimestamp(),
+        kod: code
+      });
+
+      // 4. Rastgele bir görsel seç
+      const randomImg = WALLPAPERS[Math.floor(Math.random() * WALLPAPERS.length)];
+      
+      // 5. Blob indirme işlemini başlat (safari/chrome mobile uyumluluğu için)
+      msg.textContent = 'Görsel indiriliyor...';
+      const fileResponse = await fetch(randomImg);
+      if (!fileResponse.ok) throw new Error("Image download failed");
+      const blob = await fileResponse.blob();
+      const url = window.URL.createObjectURL(blob);
+      
+      const a = document.createElement('a');
+      a.style.display = 'none';
+      a.href = url;
+      a.download = randomImg;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      a.remove();
+
+      // Başarı durumunu göster
+      document.getElementById('campaign-box').style.display = 'none';
+      document.getElementById('campaign-success-box').style.display = 'block';
+
+    } catch (err) {
+      console.error(err);
+      msg.style.color = '#f87171';
+      msg.textContent = '❌ İşlem sırasında bir hata oluştu. Lütfen tekrar deneyin.';
+      resetBtn();
+    }
+  };
+
+  function resetBtn() {
+    const btn = document.getElementById('campaign-btn');
+    btn.disabled = false;
+    btn.style.opacity = '1';
+    btn.textContent = '🎁 Görseli İndir';
+  }
+
+  // Input styling: otomatik büyük harf yapma
+  document.getElementById('campaign-code').addEventListener('input', function(e) {
+    e.target.value = e.target.value.toUpperCase();
+  });
+</script>
+
 <!-- Contact Section -->
 <section class="contact" id="contact">
 <div class="contact-inner">
