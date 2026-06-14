@@ -869,17 +869,33 @@
     <!-- Success Box (hidden by default) -->
     <div class="campaign-success-box" id="campaign-success-box">
       <div class="campaign-success-icon">🎨</div>
-      <h3 class="service-title" style="font-size: 1.5rem; margin-bottom: 0.5rem;">Duvar Kağıdınız Hazır!</h3>
-      <p class="about-desc" style="font-size: 0.9rem; margin-bottom: 1rem;">Cihazınıza özel yüksek çözünürlüklü dijital sanat eseri indirme işlemi başlatıldı.</p>
       
-      <!-- Preview Container for direct long-press save (iOS friendly) -->
-      <div class="campaign-preview-container">
-        <img id="campaign-preview-img" src="" alt="Duvar Kağıdı Önizleme" class="campaign-preview-img" />
+      <!-- Step 1: Info & iOS Guidance -->
+      <div id="success-step-info">
+        <h3 class="service-title" style="font-size: 1.5rem; margin-bottom: 1rem;">Duvar Kağıdınız Hazır!</h3>
+        <p class="about-desc" style="font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.5rem;">
+          Tasarımınız hazırlandı. <strong>Apple (iOS)</strong> cihazlardaki sistem sınırları nedeniyle indirilen görseller galerinize doğrudan kaydedilmeyebilir.<br><br>
+          Bir sonraki adımda görsel ekrana geldiğinde, görselin üzerine <strong>basılı tutarak (long-press) "Fotoğraflara Ekle"</strong> veya <strong>"Resmi Kaydet"</strong> seçeneğini seçmelisiniz.
+        </p>
+        <button id="campaign-understand-btn" class="btn btn-primary" style="width: 100%; max-width: 320px; margin: 1.5rem auto 0 auto; display: block;">
+          Anladım, Görseli Göster
+        </button>
       </div>
-      
-      <p class="about-desc" style="font-size: 0.85rem; color: var(--ink-muted); margin-top: 1rem; border-top: 1px solid rgba(44, 26, 16, 0.08); padding-top: 1rem; line-height: 1.5;">
-        💡 <strong>Apple (iOS) Kullanıcıları:</strong> İndirme otomatik başlamadıysa veya doğrudan galerinize eklemek isterseniz, yukarıdaki görselin üzerine <strong>basılı tutarak (long-press) "Fotoğraflara Ekle"</strong> veya <strong>"Resmi Kaydet"</strong> seçeneğini seçebilirsiniz.
-      </p>
+
+      <!-- Step 2: Preview & Download Trigger (hidden initially) -->
+      <div id="success-step-preview" style="display: none;">
+        <h3 class="service-title" style="font-size: 1.5rem; margin-bottom: 0.5rem;">Duvar Kağıdınız</h3>
+        <p class="about-desc" style="font-size: 0.9rem; margin-bottom: 1rem;">Cihazınız için otomatik indirme de başlatılmıştır.</p>
+        
+        <!-- Preview Container for direct long-press save (iOS friendly) -->
+        <div class="campaign-preview-container">
+          <img id="campaign-preview-img" src="" alt="Duvar Kağıdı Önizleme" class="campaign-preview-img" />
+        </div>
+        
+        <p class="about-desc" style="font-size: 0.85rem; color: var(--ink-muted); margin-top: 1rem; border-top: 1px solid rgba(44, 26, 16, 0.08); padding-top: 1rem; line-height: 1.5;">
+          💡 Görseli galerinize kaydetmek için üzerine <strong>basılı tutarak (long-press) "Fotoğraflara Ekle"</strong> veya <strong>"Resmi Kaydet"</strong> seçeneğini seçin.
+        </p>
+      </div>
     </div>
   </div>
 </section>
@@ -998,37 +1014,59 @@
       // 4. Rastgele bir görsel seç
       const randomImg = WALLPAPERS[Math.floor(Math.random() * WALLPAPERS.length)];
       
-      // 5. Blob indirme işlemini başlat (safari/chrome mobile uyumluluğu için)
-      msg.textContent = 'Görsel indiriliyor...';
-      const fileResponse = await fetch(randomImg);
-      if (!fileResponse.ok) throw new Error("Image download failed");
-      const blob = await fileResponse.blob();
-      const url = window.URL.createObjectURL(blob);
-      
-      const a = document.createElement('a');
-      a.style.display = 'none';
-      a.href = url;
-      a.download = randomImg;
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      a.remove();
-
-      // Başarı durumunu göster
+      // Önizleme resmini hazırla
       document.getElementById('campaign-preview-img').src = randomImg;
+
+      // Başarı adımlarını sıfırla (Adım 1 görünür, Adım 2 gizli)
+      document.getElementById('success-step-info').style.display = 'block';
+      document.getElementById('success-step-preview').style.display = 'none';
+
+      // Formu gizle, başarı kutusunu göster
       document.getElementById('campaign-box').style.display = 'none';
       document.getElementById('campaign-success-box').style.display = 'block';
 
-      // Unlimited kod ise 3 saniye sonra formu tekrar görünür yap ki tekrar indirilebilsin
-      if (IS_UNLIMITED_CODE) {
-        setTimeout(() => {
-          document.getElementById('campaign-box').style.display = 'flex';
-          document.getElementById('campaign-success-box').style.display = 'none';
-          document.getElementById('campaign-preview-img').src = '';
-          inp.value = '';
-          resetBtn();
-          msg.textContent = '';
-        }, 3000);
+      // "Anladım, Görseli Göster" butonuna tıklama aksiyonu
+      document.getElementById('campaign-understand-btn').onclick = async function() {
+        // Adım 1'i gizle, Adım 2'yi göster
+        document.getElementById('success-step-info').style.display = 'none';
+        document.getElementById('success-step-preview').style.display = 'block';
+
+        // Blob indirme işlemini başlat (yedek olarak otomatik indirme tetiklenir)
+        try {
+          const fileResponse = await fetch(randomImg);
+          if (fileResponse.ok) {
+            const blob = await fileResponse.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = randomImg.split('/').pop();
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            a.remove();
+          }
+        } catch (downloadErr) {
+          console.error("Auto download failed:", downloadErr);
+        }
+
+        // Test/Sınırsız kodu ise görsel gösterildikten 8 saniye sonra formu sıfırla ve geri getir
+        if (IS_UNLIMITED_CODE) {
+          setTimeout(() => {
+            document.getElementById('campaign-box').style.display = 'flex';
+            document.getElementById('campaign-success-box').style.display = 'none';
+            document.getElementById('campaign-preview-img').src = '';
+            inp.value = '';
+            resetBtn();
+            msg.textContent = '';
+          }, 8000);
+        }
+      };
+
+      // Normal kullanıcıda butonu arka planda sıfırla (sayfa yenilenirse veya form sıfırlanırsa hazır olsun)
+      if (!IS_UNLIMITED_CODE) {
+        resetBtn();
+        msg.textContent = '';
       }
 
     } catch (err) {
