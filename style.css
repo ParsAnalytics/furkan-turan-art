@@ -654,6 +654,27 @@ cite { font-size: 0.72rem; letter-spacing: 0.2em; color: var(--ink-muted); font-
   line-height: 1;
   margin-bottom: 1rem;
 }
+.campaign-preview-container {
+  margin: 1.5rem auto;
+  max-width: 200px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(44, 26, 16, 0.15);
+  border: 4px solid #fff;
+  background: #fff;
+  transition: transform 0.3s ease;
+}
+.campaign-preview-container:hover {
+  transform: scale(1.02);
+}
+.campaign-preview-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+  cursor: pointer;
+}
+
 
 /* ============================================================
    CONTACT

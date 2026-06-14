@@ -866,8 +866,17 @@
     <!-- Success Box (hidden by default) -->
     <div class="campaign-success-box" id="campaign-success-box">
       <div class="campaign-success-icon">🎨</div>
-      <h3 class="service-title" style="font-size: 1.5rem; margin-bottom: 0.5rem;">Duvar Kağıdınız İndirildi!</h3>
-      <p class="about-desc" style="font-size: 0.9rem;">Cihazınıza özel yüksek çözünürlüklü dijital sanat eseri indirme işlemi başlatıldı. Keyifle kullanın!</p>
+      <h3 class="service-title" style="font-size: 1.5rem; margin-bottom: 0.5rem;">Duvar Kağıdınız Hazır!</h3>
+      <p class="about-desc" style="font-size: 0.9rem; margin-bottom: 1rem;">Cihazınıza özel yüksek çözünürlüklü dijital sanat eseri indirme işlemi başlatıldı.</p>
+      
+      <!-- Preview Container for direct long-press save (iOS friendly) -->
+      <div class="campaign-preview-container">
+        <img id="campaign-preview-img" src="" alt="Duvar Kağıdı Önizleme" class="campaign-preview-img" />
+      </div>
+      
+      <p class="about-desc" style="font-size: 0.85rem; color: var(--ink-muted); margin-top: 1rem; border-top: 1px solid rgba(44, 26, 16, 0.08); padding-top: 1rem; line-height: 1.5;">
+        💡 <strong>Apple (iOS) Kullanıcıları:</strong> İndirme otomatik başlamadıysa veya doğrudan galerinize eklemek isterseniz, yukarıdaki görselin üzerine <strong>basılı tutarak (long-press) "Fotoğraflara Ekle"</strong> veya <strong>"Resmi Kaydet"</strong> seçeneğini seçebilirsiniz.
+      </p>
     </div>
   </div>
 </section>
@@ -1003,6 +1012,7 @@
       a.remove();
 
       // Başarı durumunu göster
+      document.getElementById('campaign-preview-img').src = randomImg;
       document.getElementById('campaign-box').style.display = 'none';
       document.getElementById('campaign-success-box').style.display = 'block';
 
@@ -1011,6 +1021,7 @@
         setTimeout(() => {
           document.getElementById('campaign-box').style.display = 'flex';
           document.getElementById('campaign-success-box').style.display = 'none';
+          document.getElementById('campaign-preview-img').src = '';
           inp.value = '';
           resetBtn();
           msg.textContent = '';
