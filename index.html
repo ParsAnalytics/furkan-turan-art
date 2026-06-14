@@ -1143,7 +1143,16 @@
     const isFacebook = /FBAN/i.test(ua) || /FBAV/i.test(ua);
     
     if (isInstagram || isFacebook) {
-      document.getElementById('instagram-warning').style.display = 'block';
+      const isAndroid = /Android/i.test(ua);
+      const warningEl = document.getElementById('instagram-warning');
+      
+      if (isAndroid) {
+        warningEl.innerHTML = `⚠️ <strong>Instagram İçindesiniz (Android):</strong> Instagram tarayıcısı güvenlik politikaları nedeniyle dosya indirmeyi ve görsel basılı tutarak kaydetmeyi engeller. Duvar kağıdını sorunsuz almak için sağ üst köşedeki <strong>üç noktaya (⋮)</strong> dokunup <strong>"Chrome'da Aç"</strong> veya <strong>"Tarayıcıda Aç"</strong> seçeneğini seçmelisiniz.`;
+      } else {
+        warningEl.innerHTML = `⚠️ <strong>Instagram İçindesiniz (iOS / Apple):</strong> Instagram tarayıcısı güvenlik politikaları nedeniyle otomatik dosya indirmeyi engeller. Duvar kağıdını sorunsuz indirmek için sağ üst köşedeki <strong>üç noktaya (•••)</strong> dokunup <strong>"Safari'de Aç"</strong> seçeneğini seçmelisiniz.`;
+      }
+      
+      warningEl.style.display = 'block';
     }
   } catch (uaErr) {
     console.error("User agent check failed:", uaErr);
